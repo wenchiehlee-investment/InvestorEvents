@@ -1,9 +1,9 @@
 """
 Run all event fetchers in sequence.
 Usage:
-    python fetch_all_events.py              # run all four
+    python fetch_all_events.py              # run all
     python fetch_all_events.py crashes ai   # run specific fetchers
-Available keys: crashes, stock, ai, nvidia
+Available keys: crashes, stock, ai, nvidia, earnings
 """
 
 import sys
@@ -11,12 +11,14 @@ from fetch_historical_crashes import generate_historical_crashes
 from fetch_stock_events import generate_stock_events
 from fetch_ai_events import generate_ai_events
 from fetch_nvidia_events import generate_nvidia_events
+from fetch_upcoming_earnings import generate_upcoming_earnings
 
 FETCHERS = {
-    "crashes": ("歷史股市崩盤事件", generate_historical_crashes),
-    "stock":   ("重要股市事件",       generate_stock_events),
-    "ai":      ("重要AI事件",         generate_ai_events),
-    "nvidia":  ("NVIDIA AI硬體事件",  generate_nvidia_events),
+    "crashes":  ("歷史股市崩盤事件",    generate_historical_crashes),
+    "stock":    ("重要股市事件",         generate_stock_events),
+    "ai":       ("重要AI事件",           generate_ai_events),
+    "nvidia":   ("NVIDIA AI硬體事件",    generate_nvidia_events),
+    "earnings": ("未來30天財報/法說會",  generate_upcoming_earnings),
 }
 
 
