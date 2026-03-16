@@ -1,9 +1,8 @@
 import os
 import csv
 import io
-from google import genai
-from google.genai import types
 from dotenv import load_dotenv
+from llm import LLMClient
 
 load_dotenv()
 
@@ -117,26 +116,12 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
 
 def generate_historical_crashes() -> None:
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        print("Error: GEMINI_API_KEY environment variable not set.")
-        return
-
-    client = genai.Client(api_key=api_key)
     print("Fetching historical market crash events (1990-Present)...")
-    print("Sending request to Gemini 2.5 Flash with Google Search...")
+    print("Sending request to Gemini 2.0 Flash...")
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=PROMPT,
-            config=types.GenerateContentConfig(
-                tools=[types.Tool(google_search=types.GoogleSearch())],
-                response_modalities=["TEXT"],
-            ),
-        )
-
-        csv_content = clean_csv(response.text)
+        client = LLMClient(providers=["gemini"], model="gemini-2.0-flash", app_name="InvestorEvents")
+        csv_content = clean_csv(client.generate(PROMPT))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)
