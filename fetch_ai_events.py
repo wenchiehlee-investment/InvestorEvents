@@ -114,10 +114,10 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
 def generate_ai_events() -> None:
     print("Fetching major AI events (Market & Business Impact)...")
-    print("Sending request to Gemini 2.0 Flash...")
+    print("Sending request to Codex (chatgpt-pro)...")
 
     try:
-        client = LLMClient(providers=["gemini"], model="gemini-2.0-flash", app_name="InvestorEvents")
+        client = LLMClient(app_name="InvestorEvents")
         csv_content = clean_csv(client.generate(PROMPT))
         save_csv(csv_content, OUTPUT_FILE)
 
