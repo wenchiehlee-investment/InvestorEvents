@@ -1,0 +1,44 @@
+name: Weekly Earnings & 法說會 Fetch
+
+on:
+  schedule:
+    # Every Monday 01:00 UTC = 09:00 Taipei time
+    - cron: "0 1 * * 1"
+  workflow_dispatch:  # allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install requests urllib3 yfinance python-dotenv
+
+      - name: Run fetch
+        run: python fetch_upcoming_earnings.py
+
+      - name: Commit updated CSV
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add upcoming_earnings.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: weekly update upcoming_earnings.csv [skip ci]"
+            git push
+          fi
