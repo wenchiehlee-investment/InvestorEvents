@@ -11,9 +11,8 @@ import os
 import re
 from datetime import datetime, timedelta
 
-import httpx
-import requests
 import urllib3
+import requests
 import yfinance as yf
 from dotenv import load_dotenv
 
@@ -64,8 +63,8 @@ def _load_tw_watchlist(csv_path: str) -> dict[str, str]:
                 watchlist[f"{code}.TW"] = name
     return watchlist
 
-MOPS_LEGAL_URL = "https://mops.twse.com.tw/mops/web/ajax_t100sb01_1"
-MOPS_BASE_URL  = "https://mops.twse.com.tw/mops/web/t100sb01"
+MOPS_BASE_URL       = "https://mops.twse.com.tw/mops/#/web/t100sb07_1"
+MOPS_REDIRECT_URL   = "https://mops.twse.com.tw/mops/api/redirectToOld"
 
 
 def _date_range_30() -> tuple[datetime, datetime]:
@@ -75,94 +74,99 @@ def _date_range_30() -> tuple[datetime, datetime]:
 
 # ── Taiwan 法說會 (MOPS) ─────────────────────────────────────────────────────
 
-def _roc_ym_pairs(start: datetime, end: datetime) -> list[tuple[int, int]]:
-    """Return (ROC year, month) pairs covering the date range."""
-    pairs = []
-    cur = start.replace(day=1)
-    while cur <= end:
-        pairs.append((cur.year - 1911, cur.month))
-        cur = (cur.replace(day=28) + timedelta(days=4)).replace(day=1)
-    return pairs
-
-
-def _parse_mops_html(html: str, start: datetime, end: datetime, typek_label: str) -> list[list]:
-    """Extract rows from MOPS HTML table."""
+def _parse_mops_company_html(html: str, code: str, name: str,
+                              start: datetime, end: datetime) -> list[list]:
+    """從單一公司 ajax_t100sb07_1 HTML 擷取落在日期範圍內的法說會事件。"""
     rows = []
-    # Match <tr> blocks with td content
-    tr_blocks = re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.DOTALL | re.IGNORECASE)
-    for tr in tr_blocks:
-        tds = re.findall(r"<td[^>]*>(.*?)</td>", tr, re.DOTALL | re.IGNORECASE)
-        tds = [re.sub(r"<[^>]+>", "", td).strip() for td in tds]
-        if len(tds) < 3:
-            continue
-        # Expected columns: 公司代號, 公司名稱, 日期(民國), 時間, 地點, ...
-        code = tds[0].strip()
-        name = tds[1].strip()
-        date_roc = tds[2].strip()   # e.g. "114/03/25"
-        if not re.match(r"\d{3}/\d{2}/\d{2}", date_roc):
-            continue
+    # 找所有 ROC 日期（格式 YYY/MM/DD），出現在「召開法人說明會日期」附近
+    date_pattern = re.compile(r"(\d{3}/\d{2}/\d{2})")
+    for m in date_pattern.finditer(html):
+        date_roc = m.group(1)
         try:
-            y, m, d = date_roc.split("/")
-            event_date = datetime(int(y) + 1911, int(m), int(d))
+            y, mo, d = date_roc.split("/")
+            event_date = datetime(int(y) + 1911, int(mo), int(d))
         except ValueError:
             continue
         if not (start <= event_date <= end):
             continue
-
         date_str = event_date.strftime("%Y-%m-%d")
         event_name = f"{name}({code}) 法說會"
-        link1 = MOPS_BASE_URL
         rows.append([
-            "法說會", typek_label, event_name, date_str, date_str,
-            f"上市公司 {name}（{code}）舉辦法人說明會",
-            link1, "",
+            "法說會", "台股", event_name, date_str, date_str,
+            f"{name}（{code}）舉辦法人說明會",
+            "https://mops.twse.com.tw/mops/#/web/t100sb07_1", "",
         ])
-    return rows
+    # 同一公司同一天只取一筆
+    seen = set()
+    deduped = []
+    for r in rows:
+        key = (r[2], r[3])
+        if key not in seen:
+            seen.add(key)
+            deduped.append(r)
+    return deduped
 
 
 def fetch_tw_legal_meetings(start: datetime, end: datetime) -> list[list]:
-    """從 MOPS 抓取未來 30 天的台股法說會（上市 + 上櫃）。"""
+    """從 MOPS 抓取未來 30 天的台股法說會（focus watchlist）。
+
+    流程：POST 新版 MOPS API 取得加密 URL → GET 該 URL 取得 HTML → 解析。
+    對 focus watchlist 中每家公司逐一查詢。
+    """
+    tw_watchlist = _load_tw_watchlist(WATCHLIST_FOCUS_CSV)
+    if not tw_watchlist:
+        print(f"        Warning: {WATCHLIST_FOCUS_CSV} empty or not found.")
+        return []
+
     results = []
     session = requests.Session()
     session.verify = False
-    browser_headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8",
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+        "Origin": "https://mops.twse.com.tw",
+        "Referer": "https://mops.twse.com.tw/mops/",
+        "Content-Type": "application/json",
+        "Accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
     }
-    # 先 GET 主頁取得 session cookie
     try:
-        session.get(MOPS_BASE_URL, headers=browser_headers, timeout=15)
+        session.get("https://mops.twse.com.tw/mops/", headers=headers, timeout=15)
     except Exception:
         pass
 
-    for typek, label in [("sii", "台股上市"), ("otc", "台股上櫃")]:
-        for roc_year, month in _roc_ym_pairs(start, end):
-            try:
-                resp = session.post(
-                    MOPS_LEGAL_URL,
-                    data={
-                        "encodeURIComponent": "1",
-                        "step": "2",
-                        "firstin": "1",
-                        "off": "1",
-                        "keyword4": "",
-                        "code1": "",
-                        "TYPEK": typek,
-                        "year": str(roc_year),
-                        "month": str(month).zfill(2),
-                        "b_date": "",
-                        "e_date": "",
-                        "isnew": "false",
+    for symbol, name in tw_watchlist.items():
+        code = symbol.replace(".TW", "").replace(".TWO", "")
+        try:
+            resp = session.post(
+                MOPS_REDIRECT_URL,
+                json={
+                    "apiName": "ajax_t100sb07_1",
+                    "parameters": {
+                        "co_id": code,
+                        "encodeURIComponent": 1,
+                        "step": 1,
+                        "firstin": 1,
+                        "off": 1,
+                        "TYPEK": "all",
                     },
-                    headers={**browser_headers, "Referer": MOPS_BASE_URL,
-                             "Content-Type": "application/x-www-form-urlencoded"},
-                    timeout=30,
-                )
-                resp.raise_for_status()
-                results.extend(_parse_mops_html(resp.text, start, end, label))
-            except Exception as e:
-                print(f"  MOPS {label} {roc_year}/{month:02d} 抓取失敗: {e}")
+                },
+                headers=headers,
+                timeout=15,
+            )
+            resp.raise_for_status()
+            url = resp.json()["result"]["url"]
+
+            resp2 = session.get(url, timeout=20)
+            resp2.raise_for_status()
+            found = _parse_mops_company_html(resp2.text, code, name, start, end)
+            if found:
+                print(f"        {code} {name}: {len(found)} 法說會")
+            results.extend(found)
+        except Exception as e:
+            print(f"  MOPS {code} {name} 抓取失敗: {e}")
+
     return results
 
 
@@ -238,40 +242,53 @@ def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
 # ── CSV helpers ──────────────────────────────────────────────────────────────
 
 def save_csv(rows: list[list], output_file: str) -> None:
-    existing_keys: set = set()
-    write_header = True
-
+    """Merge new rows into the CSV, deduplicate, sort by date descending, rewrite."""
+    # 1. 讀取現有資料
+    existing_rows: list[list] = []
     if os.path.exists(output_file):
-        write_header = False
         try:
             with open(output_file, "r", encoding="utf-8-sig") as f:
                 reader = csv.reader(f)
                 for i, row in enumerate(reader):
                     if i == 0:
-                        continue
+                        continue  # skip header
                     if len(row) >= 4:
-                        existing_keys.add((row[2].strip(), row[3].strip()))
+                        existing_rows.append(row)
         except Exception as e:
             print(f"Warning: Could not read existing file: {e}")
 
-    rows_to_write = []
+    # 2. 合併，以 (事件名稱, 開始日期) 去重
+    seen: set = set()
+    merged: list[list] = []
+    for row in existing_rows:
+        key = (row[2].strip(), row[3].strip())
+        if key not in seen:
+            seen.add(key)
+            merged.append(row)
+
+    added = 0
     for row in rows:
         if len(row) >= 4:
             key = (row[2].strip(), row[3].strip())
-            if key not in existing_keys:
-                rows_to_write.append(row)
-                existing_keys.add(key)
+            if key not in seen:
+                seen.add(key)
+                merged.append(row)
+                added += 1
 
-    if rows_to_write:
-        mode = "a" if os.path.exists(output_file) else "w"
-        with open(output_file, mode, encoding="utf-8-sig", newline="") as f:
-            writer = csv.writer(f)
-            if write_header:
-                writer.writerow(CSV_HEADERS)
-            writer.writerows(rows_to_write)
-        print(f"Appended {len(rows_to_write)} new events to '{output_file}'.")
+    # 3. 日期降冪排序（新 → 舊）
+    merged.sort(key=lambda r: r[3], reverse=True)
+
+    # 4. 整檔重寫
+    with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(CSV_HEADERS)
+        writer.writerows(merged)
+
+    total = len(merged)
+    if added:
+        print(f"Added {added} new events → CSV now has {total} rows.")
     else:
-        print(f"No new unique events to append to '{output_file}'.")
+        print(f"No new events. CSV unchanged at {total} rows.")
 
 
 # ── main ─────────────────────────────────────────────────────────────────────
@@ -296,9 +313,6 @@ def generate_upcoming_earnings() -> None:
     tw_earn_rows = fetch_tw_earnings(start, end)
     print(f"        Found {len(tw_earn_rows)} Taiwan earnings events.")
     all_rows.extend(tw_earn_rows)
-
-    # Sort by date
-    all_rows.sort(key=lambda r: r[3])
 
     save_csv(all_rows, OUTPUT_FILE)
 
