@@ -69,7 +69,7 @@ MOPS_REDIRECT_URL   = "https://mops.twse.com.tw/mops/api/redirectToOld"
 
 def _date_range_30() -> tuple[datetime, datetime]:
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    return today, today + timedelta(days=30)
+    return today - timedelta(days=30), today + timedelta(days=30)
 
 
 # ── Taiwan 法說會 (MOPS) ─────────────────────────────────────────────────────
