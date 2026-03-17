@@ -1,4 +1,4 @@
-﻿類別," ""子類別"""," ""事件名稱"""," ""開始日期"""," ""結束日期"""," ""備註"""," ""Link1"""," ""Link2"""
-市場結構," ""市場開放"""," ""台灣開放QFII(合格外國機構投資者)額度"""," ""1990-12-28"""," ""1996-03-01"""," ""逐步開放外資投資台股，引導大量國際資金進入台灣市場，對台股長期發展影響深遠。"""," ""https://www.twse.com.tw/zh/page/products/reference/history_policy.html"""," ""https://www.taiwan-insurance.com.tw/history.htm"""
-市場結構," ""交易制度"""," ""美國證券交易委員會(SEC)實施熔斷機制"""," ""1997-10-27"""," ""1997-10-27"""," ""首次因市場劇烈波動觸發熔斷機制，旨在防止市場恐慌性拋售，維持市場穩定。"""," ""https://www.sec.gov/rules/concept/s73507/cmaharaj0908.pdf"""," ""https://en.wikipedia.org/wiki/Circuit_breaker_(financial_markets)#United_States"""
-公司行動," ""重大IPO"""," ""Netscape Communications (NSCP) IPO"""," ""1995-08-09"""," ""1995-08-09"""," ""點燃網路"
+﻿類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
+市場結構,市場開放,台灣開放QFII(合格外國機構投資者)額度,1990-12-28,1996-03-01,逐步開放外資投資台股，引導大量國際資金進入台灣市場，對台股長期發展影響深遠。,https://www.twse.com.tw/zh/page/products/reference/history_policy.html,https://www.taiwan-insurance.com.tw/history.htm
+市場結構,交易制度,美國證券交易委員會(SEC)實施熔斷機制,1997-10-27,1997-10-27,首次因市場劇烈波動觸發熔斷機制，旨在防止市場恐慌性拋售，維持市場穩定。,https://www.sec.gov/rules/concept/s73507/cmaharaj0908.pdf,https://en.wikipedia.org/wiki/Circuit_breaker_(financial_markets)#United_States
+公司行動,重大IPO,Netscape Communications (NSCP) IPO,1995-08-09,1995-08-09,"""點燃網路"

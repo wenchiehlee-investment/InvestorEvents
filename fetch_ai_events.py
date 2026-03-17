@@ -63,12 +63,19 @@ def clean_csv(text: str) -> str:
     return text
 
 
+def _clean_cell(v: str) -> str:
+    v = v.strip()
+    if v.startswith('"') and v.endswith('"'):
+        v = v[1:-1].strip()
+    return v
+
+
 def save_csv(csv_content: str, output_file: str) -> None:
     new_rows = []
     header = None
     try:
         reader = csv.reader(io.StringIO(csv_content))
-        rows = list(reader)
+        rows = [[_clean_cell(c) for c in row] for row in reader]
         if rows:
             header = rows[0]
             new_rows = rows[1:]
