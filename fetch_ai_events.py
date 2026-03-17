@@ -41,8 +41,8 @@ Focus on these specific Categories (類別) and Sub-categories (子類別):
    - 監管審查 (Regulation Scrutiny) - e.g., Antitrust investigations into AI partnerships.
 
 Output Format:
-Produce a valid CSV file content with the following headers:
-"類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"
+Produce a valid CSV file content with the following headers (no quotes):
+類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
 
 Requirements:
 - Language: All text must be in Traditional Chinese (繁體中文).
@@ -125,7 +125,7 @@ def generate_ai_events() -> None:
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate(PROMPT))
+        csv_content = clean_csv(client.generate(PROMPT, max_tokens=16000))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)
