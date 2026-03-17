@@ -46,29 +46,23 @@ US_WATCHLIST = {
     "ARM":   "ARM Holdings",
 }
 
-# 監控的台股清單（TWSE .TW / TPEX .TWO）
-TW_WATCHLIST = {
-    "2330.TW":  "台積電",
-    "2317.TW":  "鴻海",
-    "2454.TW":  "聯發科",
-    "2412.TW":  "中華電",
-    "2308.TW":  "台達電",
-    "2303.TW":  "聯電",
-    "3711.TW":  "日月光投控",
-    "2382.TW":  "廣達",
-    "2395.TW":  "研華",
-    "3008.TW":  "大立光",
-    "2357.TW":  "華碩",
-    "2376.TW":  "技嘉",
-    "6505.TW":  "台塑化",
-    "2891.TW":  "中信金",
-    "2881.TW":  "富邦金",
-    "2882.TW":  "國泰金",
-    "3034.TW":  "聯詠",
-    "2379.TW":  "瑞昱",
-    "6669.TW":  "緯穎",
-    "2345.TW":  "智邦",
-}
+WATCHLIST_CSV      = "StockID_TWSE_TPEX.csv"        # 完整觀察名單
+WATCHLIST_FOCUS_CSV = "StockID_TWSE_TPEX_focus.csv"  # 專注名單
+
+
+def _load_tw_watchlist(csv_path: str) -> dict[str, str]:
+    """從 CSV（代號,名稱）載入台股清單，轉成 {symbol.TW: name} dict。"""
+    watchlist: dict[str, str] = {}
+    if not os.path.exists(csv_path):
+        print(f"  Warning: {csv_path} not found, skipping Taiwan watchlist.")
+        return watchlist
+    with open(csv_path, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            code = row.get("代號", "").strip()
+            name = row.get("名稱", "").strip()
+            if code and code != "0000":   # 跳過指數列
+                watchlist[f"{code}.TW"] = name
+    return watchlist
 
 MOPS_LEGAL_URL = "https://mops.twse.com.tw/mops/web/ajax_t100sb01_1"
 MOPS_BASE_URL  = "https://mops.twse.com.tw/mops/web/t100sb01"
@@ -229,9 +223,11 @@ def fetch_us_earnings(start: datetime, end: datetime) -> list[list]:
 
 
 def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
-    """使用 yfinance 抓取台股財報日期（未來 30 天）。"""
+    """使用 yfinance 抓取台股財報日期（未來 30 天），從 watchlist CSV 載入。"""
+    tw_watchlist = _load_tw_watchlist(WATCHLIST_CSV)
+    print(f"        Loaded {len(tw_watchlist)} stocks from {WATCHLIST_CSV}")
     results = []
-    for symbol, company in TW_WATCHLIST.items():
+    for symbol, company in tw_watchlist.items():
         try:
             results.extend(_extract_earnings_dates(symbol, company, "台股", start, end))
         except Exception as e:
