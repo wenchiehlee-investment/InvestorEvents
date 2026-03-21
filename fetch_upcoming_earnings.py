@@ -23,27 +23,31 @@ load_dotenv()
 OUTPUT_FILE = "upcoming_earnings.csv"
 CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
 
-# 監控的美股清單（主要 AI / 科技 / 半導體）
-US_WATCHLIST = {
-    "NVDA":  "NVIDIA",
-    "MSFT":  "Microsoft",
-    "GOOGL": "Alphabet(Google)",
-    "AAPL":  "Apple",
-    "META":  "Meta",
-    "AMZN":  "Amazon",
-    "TSLA":  "Tesla",
-    "AMD":   "AMD",
-    "TSM":   "台積電(TSM)",
-    "AVGO":  "Broadcom",
-    "QCOM":  "Qualcomm",
-    "INTC":  "Intel",
-    "SMCI":  "Super Micro",
-    "ORCL":  "Oracle",
-    "CRM":   "Salesforce",
-    "ASML":  "ASML",
-    "MU":    "Micron",
-    "ARM":   "ARM Holdings",
-}
+# 監控的美股清單：從 raw_conceptstock_company_metadata.csv 動態載入
+# 來源：wenchiehlee-investment/ConceptStocks
+_METADATA_CSV_PATHS = [
+    "../ConceptStocks/raw_conceptstock_company_metadata.csv",  # 本機開發
+    "raw_conceptstock_company_metadata.csv",                   # CI 環境（sync 後）
+]
+
+def _load_us_watchlist() -> dict[str, str]:
+    """從 raw_conceptstock_company_metadata.csv 載入 {Ticker: 公司名稱}，排除無上市 ticker（'-'）。"""
+    for path in _METADATA_CSV_PATHS:
+        if not os.path.exists(path):
+            continue
+        result = {}
+        with open(path, encoding="utf-8-sig") as f:
+            for row in csv.DictReader(f):
+                ticker = row.get("Ticker", "").strip()
+                name   = row.get("公司名稱", "").strip()
+                if ticker and ticker != "-":
+                    result[ticker] = name
+        print(f"  [US_WATCHLIST] Loaded {len(result)} tickers from {path}")
+        return result
+    print("  [US_WATCHLIST] raw_conceptstock_company_metadata.csv not found, using empty list.")
+    return {}
+
+US_WATCHLIST = _load_us_watchlist()
 
 WATCHLIST_CSV      = "StockID_TWSE_TPEX.csv"        # 完整觀察名單
 WATCHLIST_FOCUS_CSV = "StockID_TWSE_TPEX_focus.csv"  # 專注名單
