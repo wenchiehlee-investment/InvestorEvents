@@ -1,0 +1,55 @@
+name: Sync upcoming_earnings → Mac-mini
+
+on:
+  push:
+    paths:
+      - 'upcoming_earnings.csv'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-to-mac-mini
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push CSV to ZhongZheng782/Mac-mini via GitHub API
+        env:
+          GH_PAT: ${{ secrets.MAC_MINI_REPO_PAT }}
+        run: |
+          TARGET_REPO="ZhongZheng782/Mac-mini"
+          TARGET_PATH="Whisper-API-Server/data/upcoming_earnings.csv"
+          API="https://api.github.com/repos/${TARGET_REPO}/contents/${TARGET_PATH}"
+
+          # Get current file SHA (required for update; empty = new file)
+          SHA=$(curl -s -H "Authorization: token $GH_PAT" "$API" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('sha',''))" 2>/dev/null || echo "")
+
+          CONTENT=$(base64 -w 0 upcoming_earnings.csv)
+
+          PAYLOAD=$(python3 -c "
+          import json, sys
+          d = {
+            'message': 'chore: sync upcoming_earnings.csv from InvestorEvents [skip ci]',
+            'content': sys.argv[1],
+          }
+          if sys.argv[2]: d['sha'] = sys.argv[2]
+          print(json.dumps(d))
+          " "$CONTENT" "$SHA")
+
+          HTTP=$(curl -s -o /tmp/api_resp.json -w "%{http_code}" \
+            -X PUT -H "Authorization: token $GH_PAT" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" "$API")
+
+          if [ "$HTTP" = "200" ] || [ "$HTTP" = "201" ]; then
+            echo "✓ Synced upcoming_earnings.csv to $TARGET_REPO (HTTP $HTTP)"
+          else
+            echo "✗ Sync failed (HTTP $HTTP)"
+            cat /tmp/api_resp.json
+            exit 1
+          fi
