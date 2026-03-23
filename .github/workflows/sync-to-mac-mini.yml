@@ -19,7 +19,7 @@ jobs:
 
       - name: Push CSV to ZhongZheng782/Mac-mini via GitHub API
         env:
-          GH_PAT: ${{ secrets.MAC_MINI_REPO_PAT }}
+          GH_PAT: ${{ secrets.ZhongZheng782_REPO_FILE_SYNC_ACT }}
         run: |
           TARGET_REPO="ZhongZheng782/Mac-mini"
           TARGET_PATH="Whisper-API-Server/data/upcoming_earnings.csv"
