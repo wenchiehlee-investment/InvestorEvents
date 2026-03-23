@@ -1,35 +1,57 @@
 ﻿類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
+財報公告,台股,智原(3035) 財報,2026-04-21,2026-04-21,智原 發布季度財報,https://finance.yahoo.com/quote/3035.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=3035.TW
 財報公告,美股,台積電(TSM)(TSM) 財報,2026-04-16,2026-04-16,台積電(TSM) 發布季度財報,https://finance.yahoo.com/quote/TSM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=TSM
 財報公告,台股,台積電(2330) 財報,2026-04-16,2026-04-16,台積電 發布季度財報,https://finance.yahoo.com/quote/2330.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2330.TW
+法說會,台股,台達電(2308) 法說會,2026-04-16,2026-04-16,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+財報公告,美股,Taiwan Semiconductor Manufacturing Company Limited(TSM) 財報,2026-04-16,2026-04-16,Taiwan Semiconductor Manufacturing Company Limited 發布季度財報,https://finance.yahoo.com/quote/TSM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=TSM
 財報公告,美股,ASML(ASML) 財報,2026-04-15,2026-04-15,ASML 發布季度財報,https://finance.yahoo.com/quote/ASML/financials/,https://finance.yahoo.com/calendar/earnings?symbol=ASML
+法說會,台股,光寶科(2301) 法說會,2026-04-15,2026-04-15,光寶科（2301）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,光寶科(2301) 法說會,2026-04-14,2026-04-14,光寶科（2301）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,台達電(2308) 法說會,2026-04-14,2026-04-14,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,南亞科(2408) 財報,2026-04-13,2026-04-13,南亞科 發布季度財報,https://finance.yahoo.com/quote/2408.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2408.TW
 財報公告,台股,國泰金(2882) 財報,2026-03-27,2026-03-27,國泰金 發布季度財報,https://finance.yahoo.com/quote/2882.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2882.TW
 法說會,台股,鴻海(2317) 法說會,2026-03-26,2026-03-26,鴻海（2317）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,廣達(2382) 法說會,2026-03-20,2026-03-20,廣達（2382）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,英業達(2356) 法說會,2026-03-20,2026-03-20,英業達（2356）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,啟碁(6285) 法說會,2026-03-20,2026-03-20,啟碁（6285）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,美股,Micron(MU) 財報,2026-03-19,2026-03-19,Micron 發布季度財報,https://finance.yahoo.com/quote/MU/financials/,https://finance.yahoo.com/calendar/earnings?symbol=MU
 財報公告,台股,聯強(2347) 財報,2026-03-19,2026-03-19,聯強 發布季度財報,https://finance.yahoo.com/quote/2347.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2347.TW
 法說會,台股,聯詠(3034) 法說會,2026-03-19,2026-03-19,聯詠（3034）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,LINEPAY(7722) 法說會,2026-03-19,2026-03-19,LINEPAY（7722）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,聯發科(2454) 法說會,2026-03-19,2026-03-19,聯發科（2454）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,緯創(3231) 法說會,2026-03-19,2026-03-19,緯創（3231）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,啟碁(6285) 法說會,2026-03-19,2026-03-19,啟碁（6285）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,鴻勁(7769) 財報,2026-03-18,2026-03-18,鴻勁 發布季度財報,https://finance.yahoo.com/quote/7769.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=7769.TW
 法說會,台股,威強電(3022) 法說會,2026-03-18,2026-03-18,威強電（3022）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,精誠(6214) 法說會,2026-03-18,2026-03-18,精誠（6214）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,印能科技(7734) 法說會,2026-03-18,2026-03-18,印能科技（7734）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,華碩(2357) 法說會,2026-03-18,2026-03-18,華碩（2357）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,瑞昱(2379) 法說會,2026-03-18,2026-03-18,瑞昱（2379）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,鴻準(2354) 法說會,2026-03-18,2026-03-18,鴻準（2354）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,智原(3035) 法說會,2026-03-18,2026-03-18,智原（3035）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,緯創(3231) 法說會,2026-03-18,2026-03-18,緯創（3231）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+財報公告,美股,Micron Technology(MU) 財報,2026-03-18,2026-03-18,Micron Technology 發布季度財報,https://finance.yahoo.com/quote/MU/financials/,https://finance.yahoo.com/calendar/earnings?symbol=MU
 法說會,台股,群聯(8299) 法說會,2026-03-17,2026-03-17,群聯（8299）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,仁寶(2324) 法說會,2026-03-17,2026-03-17,仁寶（2324）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,義隆(2458) 法說會,2026-03-17,2026-03-17,義隆（2458）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,台灣大(3045) 法說會,2026-03-17,2026-03-17,台灣大（3045）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,聯發科(2454) 法說會,2026-03-17,2026-03-17,聯發科（2454）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,鴻準(2354) 法說會,2026-03-17,2026-03-17,鴻準（2354）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,鴻海(2317) 財報,2026-03-16,2026-03-16,鴻海 發布季度財報,https://finance.yahoo.com/quote/2317.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2317.TW
 法說會,台股,微星(2377) 法說會,2026-03-13,2026-03-13,微星（2377）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,緯創(3231) 法說會,2026-03-13,2026-03-13,緯創（3231）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,啟碁(6285) 法說會,2026-03-13,2026-03-13,啟碁（6285）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,台積電(2330) 法說會,2026-03-12,2026-03-12,台積電（2330）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,聯電(2303) 法說會,2026-03-12,2026-03-12,聯電（2303）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,中華電(2412) 法說會,2026-03-11,2026-03-11,中華電（2412）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,聯陽(3014) 法說會,2026-03-11,2026-03-11,聯陽（3014）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,和碩(4938) 法說會,2026-03-11,2026-03-11,和碩（4938）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,聯電(2303) 法說會,2026-03-11,2026-03-11,聯電（2303）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,聯發科(2454) 法說會,2026-03-10,2026-03-10,聯發科（2454）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,敦陽科(2480) 法說會,2026-03-10,2026-03-10,敦陽科（2480）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,台達電(2308) 法說會,2026-03-10,2026-03-10,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,瑞昱(2379) 法說會,2026-03-10,2026-03-10,瑞昱（2379）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,智原(3035) 法說會,2026-03-10,2026-03-10,智原（3035）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,中華資安(7765) 法說會,2026-03-05,2026-03-05,中華資安（7765）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,緯穎(6669) 法說會,2026-02-26,2026-02-26,緯穎（6669）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,光寶科(2301) 法說會,2026-02-25,2026-02-25,光寶科（2301）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
