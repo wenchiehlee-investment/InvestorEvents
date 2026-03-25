@@ -7,8 +7,10 @@ Data sources:
 """
 
 import csv
+import io
 import os
 import re
+import sys
 from datetime import datetime, timedelta
 
 import urllib3
@@ -230,16 +232,43 @@ def fetch_us_earnings(start: datetime, end: datetime) -> list[list]:
     return results
 
 
+def _extract_earnings_dates_quiet(symbol: str, company: str, market: str,
+                                   start: datetime, end: datetime) -> list[list]:
+    """Same as _extract_earnings_dates but suppresses yfinance's 404 stderr noise."""
+    buf = io.StringIO()
+    old_stderr, old_stdout = sys.stderr, sys.stdout
+    sys.stderr = sys.stdout = buf
+    try:
+        return _extract_earnings_dates(symbol, company, market, start, end)
+    except Exception:
+        return []
+    finally:
+        sys.stderr, sys.stdout = old_stderr, old_stdout
+
+
 def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
-    """使用 yfinance 抓取台股財報日期（未來 30 天），從 watchlist CSV 載入。"""
+    """使用 yfinance 抓取台股財報日期（未來 30 天），從 watchlist CSV 載入。
+    自動 fallback .TW → .TWO（TPEX 上櫃股需用 .TWO）。
+    """
     tw_watchlist = _load_tw_watchlist(WATCHLIST_CSV)
     print(f"        Loaded {len(tw_watchlist)} stocks from {WATCHLIST_CSV}")
     results = []
+    tpex_fallbacks = 0
     for symbol, company in tw_watchlist.items():
-        try:
-            results.extend(_extract_earnings_dates(symbol, company, "台股", start, end))
-        except Exception as e:
-            print(f"  {symbol} 財報日期抓取失敗: {e}")
+        # Try .TW first (suppress noisy 404 warnings)
+        rows = _extract_earnings_dates_quiet(symbol, company, "台股", start, end)
+        # If empty, retry with .TWO (TPEX/OTC stocks use .TWO on Yahoo Finance)
+        if not rows and symbol.endswith(".TW"):
+            alt = symbol[:-3] + ".TWO"
+            try:
+                rows = _extract_earnings_dates(alt, company, "台股", start, end)
+                if rows:
+                    tpex_fallbacks += 1
+            except Exception as e:
+                print(f"  {symbol} / {alt} 財報日期抓取失敗: {e}")
+        results.extend(rows)
+    if tpex_fallbacks:
+        print(f"        ({tpex_fallbacks} stocks resolved via .TWO fallback)")
     return results
 
 
