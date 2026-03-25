@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wenchiehlee-money/InvestorConference
-          token: ${{ secrets.IC_PAT }}
+          token: ${{ secrets.REPO_FILE_SYNC_WENCHIEHLEE_MONEY }}
           path: InvestorConference
 
       - name: Copy CSV and push to InvestorConference
