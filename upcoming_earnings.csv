@@ -1,16 +1,32 @@
 ﻿類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
+財報公告,美股,Meta Platforms Inc.(META) 財報,2026-04-29,2026-04-29,Meta Platforms Inc. 發布季度財報,https://finance.yahoo.com/quote/META/financials/,https://finance.yahoo.com/calendar/earnings?symbol=META
+財報公告,美股,Microsoft Corporation(MSFT) 財報,2026-04-29,2026-04-29,Microsoft Corporation 發布季度財報,https://finance.yahoo.com/quote/MSFT/financials/,https://finance.yahoo.com/calendar/earnings?symbol=MSFT
+財報公告,美股,Qualcomm Inc.(QCOM) 財報,2026-04-29,2026-04-29,Qualcomm Inc. 發布季度財報,https://finance.yahoo.com/quote/QCOM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=QCOM
+財報公告,台股,台達電(2308) 財報,2026-04-29,2026-04-29,台達電 發布季度財報,https://finance.yahoo.com/quote/2308.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2308.TW
+財報公告,台股,聯發科(2454) 財報,2026-04-29,2026-04-29,聯發科 發布季度財報,https://finance.yahoo.com/quote/2454.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2454.TW
+財報公告,台股,光寶科(2301) 財報,2026-04-29,2026-04-29,光寶科 發布季度財報,https://finance.yahoo.com/quote/2301.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2301.TW
+財報公告,台股,聯電(2303) 財報,2026-04-29,2026-04-29,聯電 發布季度財報,https://finance.yahoo.com/quote/2303.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2303.TW
+財報公告,台股,台光電(2383) 財報,2026-04-29,2026-04-29,台光電 發布季度財報,https://finance.yahoo.com/quote/2383.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2383.TW
+財報公告,台股,日月光投控(3711) 財報,2026-04-29,2026-04-29,日月光投控 發布季度財報,https://finance.yahoo.com/quote/3711.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=3711.TW
+財報公告,台股,聯詠(3034) 財報,2026-04-28,2026-04-28,聯詠 發布季度財報,https://finance.yahoo.com/quote/3034.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=3034.TW
+財報公告,美股,Alphabet Inc.(GOOGL) 財報,2026-04-23,2026-04-23,Alphabet Inc. 發布季度財報,https://finance.yahoo.com/quote/GOOGL/financials/,https://finance.yahoo.com/calendar/earnings?symbol=GOOGL
+財報公告,台股,研華(2395) 財報,2026-04-23,2026-04-23,研華 發布季度財報,https://finance.yahoo.com/quote/2395.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2395.TW
 財報公告,台股,智原(3035) 財報,2026-04-21,2026-04-21,智原 發布季度財報,https://finance.yahoo.com/quote/3035.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=3035.TW
 財報公告,美股,台積電(TSM)(TSM) 財報,2026-04-16,2026-04-16,台積電(TSM) 發布季度財報,https://finance.yahoo.com/quote/TSM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=TSM
 財報公告,台股,台積電(2330) 財報,2026-04-16,2026-04-16,台積電 發布季度財報,https://finance.yahoo.com/quote/2330.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2330.TW
 法說會,台股,台達電(2308) 法說會,2026-04-16,2026-04-16,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,美股,Taiwan Semiconductor Manufacturing Company Limited(TSM) 財報,2026-04-16,2026-04-16,Taiwan Semiconductor Manufacturing Company Limited 發布季度財報,https://finance.yahoo.com/quote/TSM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=TSM
+法說會,台股,台積電(2330) 法說會,2026-04-16,2026-04-16,台積電（2330）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,美股,ASML(ASML) 財報,2026-04-15,2026-04-15,ASML 發布季度財報,https://finance.yahoo.com/quote/ASML/financials/,https://finance.yahoo.com/calendar/earnings?symbol=ASML
 法說會,台股,光寶科(2301) 法說會,2026-04-15,2026-04-15,光寶科（2301）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,光寶科(2301) 法說會,2026-04-14,2026-04-14,光寶科（2301）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,台達電(2308) 法說會,2026-04-14,2026-04-14,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,南亞科(2408) 財報,2026-04-13,2026-04-13,南亞科 發布季度財報,https://finance.yahoo.com/quote/2408.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2408.TW
+法說會,台股,鴻海(2317) 法說會,2026-04-10,2026-04-10,鴻海（2317）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,鴻海(2317) 法說會,2026-03-30,2026-03-30,鴻海（2317）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,國泰金(2882) 財報,2026-03-27,2026-03-27,國泰金 發布季度財報,https://finance.yahoo.com/quote/2882.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2882.TW
 法說會,台股,鴻海(2317) 法說會,2026-03-26,2026-03-26,鴻海（2317）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
+法說會,台股,和碩(4938) 法說會,2026-03-25,2026-03-25,和碩（4938）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,廣達(2382) 法說會,2026-03-20,2026-03-20,廣達（2382）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,英業達(2356) 法說會,2026-03-20,2026-03-20,英業達（2356）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,啟碁(6285) 法說會,2026-03-20,2026-03-20,啟碁（6285）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
