@@ -52,3 +52,27 @@
 ### File Characteristics:
 - **Standalone file**: No GoodInfo metadata columns.
 - **Update Frequency**: On-demand or scheduled periodic updates.
+
+---
+
+## raw_event_ai_events.csv (AI Technology & Market Events)
+**No:** 62
+**Source:** `fetch_ai_events.py` via LLM / Financial News
+**Extraction Strategy:** Uses LLM to identify critical AI-related events (product launches, M&A, model releases) that impacted the market.
+
+### Column Definitions:
+
+| Column | Type | Description | Example |
+|--------|------|-------------|---------|
+| `類別` | string | Event category | `市場與資本`, `產品發布` |
+| `子類別` | string | Detailed event type | `市值里程碑`, `生成式AI應用` |
+| `事件名稱` | string | Event name | `ChatGPT Launch` |
+| `開始日期` | date | Event start date (YYYY-MM-DD) | `2022-11-30` |
+| `結束日期` | date | Event end date (YYYY-MM-DD) | `2022-11-30` |
+| `備註` | string | Business/Market impact | `引發全球 AI 軍備競賽...` |
+| `Link1` | url | Primary source link | `https://example.com/source1` |
+| `Link2` | url | Secondary source link | `https://example.com/source2` |
+
+### File Characteristics:
+- **Standalone file**: No GoodInfo metadata columns.
+- **Update Frequency**: On-demand or periodic updates.
