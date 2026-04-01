@@ -4,3 +4,8 @@ group:
         dest: raw_event_upcoming_earnings.csv
     repos: |
       wenchiehlee-money/InvestorConference
+  - files:
+      - source: raw_event_historical_crashes.csv
+        dest: raw_event_historical_crashes.csv
+    repos: |
+      wenchiehlee/VIX

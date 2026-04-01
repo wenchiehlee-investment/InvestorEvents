@@ -1,13 +1,14 @@
-name: Sync upcoming_earnings → InvestorConference
+name: Sync Events to Downstream
 
 on:
   push:
     paths:
       - 'raw_event_upcoming_earnings.csv'
+      - 'raw_event_historical_crashes.csv'
   workflow_dispatch:
 
 concurrency:
-  group: sync-to-investor-conference
+  group: sync-events
   cancel-in-progress: false
 
 jobs:
