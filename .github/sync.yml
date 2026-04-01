@@ -8,4 +8,4 @@ group:
       - source: raw_event_historical_crashes.csv
         dest: raw_event_historical_crashes.csv
     repos: |
-      wenchiehlee/VIX
+      wenchiehlee-money/VIX
