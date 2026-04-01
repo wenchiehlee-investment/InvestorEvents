@@ -3,6 +3,7 @@
 
 ### Version History:
 - **v1.0.0** (2026-04-01): Initial column definition for upcoming earnings events.
+- **v1.1.0** (2026-04-01): Added historical crashes, AI events, NVIDIA milestones, and critical stock market events.
 
 ---
 
@@ -94,6 +95,30 @@
 | `開始日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
 | `結束日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
 | `備註` | string | Business impact | `NVIDIA Hopper 架構發布，奠定 AI 算力基礎...` |
+| `Link1` | url | Primary source link | `https://example.com/source1` |
+| `Link2` | url | Secondary source link | `https://example.com/source2` |
+
+### File Characteristics:
+- **Standalone file**: No GoodInfo metadata columns.
+- **Update Frequency**: On-demand or periodic updates.
+
+---
+
+## raw_event_stock_events.csv (Critical Stock Market Events)
+**No:** 64
+**Source:** `fetch_stock_events.py` via LLM / Financial News
+**Extraction Strategy:** Uses LLM to identify high-impact stock market events (structural changes, major bubbles, sector rotations) from 1990 to the present.
+
+### Column Definitions:
+
+| Column | Type | Description | Example |
+|--------|------|-------------|---------|
+| `類別` | string | Event category | `市場結構`, `產業趨勢` |
+| `子類別` | string | Detailed event type | `泡沫爆破`, `科技板塊` |
+| `事件名稱` | string | Event name | `Dot-com Bubble Burst` |
+| `開始日期` | date | Event date (YYYY-MM-DD) | `2000-03-10` |
+| `結束日期` | date | Event date (YYYY-MM-DD) | `2002-10-09` |
+| `備註` | string | Business impact | `網際網路泡沫破裂，導致納斯達克指數重挫...` |
 | `Link1` | url | Primary source link | `https://example.com/source1` |
 | `Link2` | url | Secondary source link | `https://example.com/source2` |
 
