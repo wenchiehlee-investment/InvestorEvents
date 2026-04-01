@@ -1,3 +1,24 @@
 ﻿類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
 金融危機,銀行倒閉,美國儲貸危機餘波及經濟衰退,1990-07-01,1991-03-31,美國儲貸危機的持續影響與經濟衰退導致股市下跌。道瓊工業指數在1990年夏季至秋季下跌超過15%。,https://www.federalreservehistory.org/essays/savings_and_loan_crisis,https://www.investopedia.com/terms/s/sl-crisis.asp
 政策衝擊,證所稅事件,台灣證所稅復徵爭議,1990-03-10,1990-10-01,行政院宣布復徵證所稅，引發台灣股市恐慌性賣壓，加權指數從1990年2月的12495點狂瀉至10月的2485點，跌幅超過80%。,https://news.cts.com.tw/old/money/199003/199003120038848.html,https://tw.stock.yahoo.com/news/%E8%B3%87%E6%96%99-%E5%8F%B0%E8%82%A1%E9%91
+政策衝擊,證所稅事件,1990年證所稅事件,1990-03-27,1990-10-01,行政院宣布復徵證所稅引發市場恐慌，台股從萬點高點腰斬至2485點，跌幅逾80%。,https://www.wealth.com.tw/articles/ce7a7833-8a2a-41f2-b816-1f6b15822365,https://www.ptt.cc/bbs/Stock/M.1593926521.A.49F.html
+地緣政治,戰爭衝突,波斯灣戰爭爆發,1990-08-02,1991-02-28,伊拉克入侵科威特，引發油價飆升及全球經濟衰退擔憂，全球股市動盪不安。,https://www.investopedia.com/articles/forex/09/how-gulf-war-affected-market.asp,
+金融危機,特定市場泡沫破裂,日本泡沫經濟破裂,1991-01-01,1991-12-31,日本股市與房市泡沫破裂，日經指數
+地緣政治," ""戰爭衝突"""," ""海灣戰爭爆發"""," ""1990-08-02"""," ""1991-02-28"""," ""油價飆升，全球股市動盪，道瓊工業指數在1990年8月至10月間下跌超過15%。"""," ""https://www.cfr.org/wars-and-conflict/gulf-war"""," """""
+金融危機," ""亞洲金融風暴"""," ""亞洲金融風暴"""," ""1997-07-02"""," ""1998-12-31"""," ""泰銖貶值引發區域性金融危機，台灣加權指數跌幅超過30%，香港恆生指數跌幅超過50%。"""," ""https://www.imf.org/external/np/exr/facts/asia.htm"""," """""
+金融危機," ""銀行倒閉"""," ""俄羅斯金融危機與LTCM倒閉"""," ""1998-08-17"""," ""1998-10-01"""," ""俄羅斯債務違約引發全球市場恐慌，長期資本管理公司(LTCM)面臨破產，美國聯準會介入救市，道瓊指數短期下跌近20%。"""," ""https://www.federalreserve.gov"
+地緣政治," ""戰爭衝突"""," ""波斯灣戰爭爆發"""," ""1990-08-02"""," ""1991-02-28"""," ""油價飆升，全球股市震盪，道瓊工業指數在1990年夏季下跌超過15%。"""," ""https://www.cfr.org/wars-and-conflict/gulf-war"""," ""https://www.investopedia.com/articles/investing/080514/how-geopolitics-affect-markets-gulf-war-example.asp"""
+金融危機," ""亞洲金融風暴"""," ""亞洲金融風暴爆發 (泰銖貶值引爆)"""," ""1997-07-02"""," ""1998-08-31"""," ""亞洲各國貨幣大幅貶值，股市暴跌，台灣加權指數跌幅超過30%。"""," ""https://www.investopedia.com/terms/a/asian-financial-crisis.asp"""," ""https://www.imf.org/en/About/Factsheets/Sheets/2016/08/01/Asian-Financial-Crisis"""
+金融危機," ""銀行倒閉"""," ""俄羅斯債務違約與盧布貶值"""," ""199"
+公共衛生," ""傳染病爆發"""," ""COVID-19全球大流行初期衝擊"""," ""2020-01-20"""," ""2020-02-20"""," ""武漢封城與全球疫情擴散恐慌，市場開始反應。S&P 500下跌約10%。"""," ""https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/previous-covid-data/index.html"""," ""https://www.bloomberg.com/news/articles/2020-02-24/stock-markets-plunge-as-coronavirus-fear-spreads-globally?srnd=markets-vp"""
+公共衛生," ""傳染病爆發"""," ""COVID-19「黑色星期一」股市崩盤"""," ""2020-03-09"""," ""2020-03-23"""," ""全球封鎖、經濟停擺預期，引發恐慌性拋售。S&P 500從高峰下跌超過30%。"""," ""https://www.nytimes.com/2020/03/09/business/economy/stock-market-plunge-oil.html"""," ""https://www.cnbc.com/20"
+公共衛生," ""傳染病爆發"""," ""COVID-19全球大流行引發市場崩盤"""," ""2020-02-20"""," ""2020-03-23"""," ""全球股市，尤其是美股和台股，在短期內經歷歷史性的大跌，道瓊工業指數多次觸發熔斷機制。"""," ""https://www.wsj.com/articles/the-day-the-stock-market-crashed-11586522303"""," ""https://money.udn.com/money/story/5607/4412217"""
+地緣政治," ""戰爭衝突"""," ""俄羅斯入侵烏克蘭"""," ""2022-02-24"""," ""2022-03-08"""," ""俄烏戰爭爆發導致能源及大宗商品價格飆升，全球供應鏈進一步受阻，引發市場恐慌和通脹擔憂，全球股市普遍下跌。"""," ""https://www.cnbc.com/2022/02/24/heres-how-markets-reacted-to-russias-invasion-of-ukraine.html"""," ""https://www.scmp.com/economy/global-economy/article/31682"
+金融危機,日圓套利交易平倉,日圓套利交易平倉引發全球股市崩盤,2024-08-05,2024-08-07,日本銀行意外升息引發日圓強升，全球套利交易平倉，日經指數單日暴跌12.4%，台股重挫1807點(8.35%)。,https://www.reuters.com/markets/asia/nikkei-plunges-10-global-market-rout-deepens-2024-08-05/,
+地緣政治,戰爭衝突,以色列-伊朗衝突升級,2024-04-19,2024-04-20,以色列對伊朗進行報復性打擊，引發中東戰爭全面擴大擔憂，台股單日重挫774點，創當時史上單日最大跌點。,https://www.cnbc.com/2024/04/18/stock-market-today-live-updates.html,
+地緣政治,貿易戰/制裁,美國擴大對中AI晶片禁令,2024-07-17,2024-07-18,美國考慮採用更嚴厲的貿易限制(FDPR)阻止晶片流入中國，輝達(NVIDIA)及半導體股大幅重挫，台股重摔逾600點。,https://www.bloomberg.com/news/articles/2024-07-17/biden-considers-tighter-curbs-on-china-tech-sending-chips-lower,
+政策衝擊,貨幣政策,日本銀行(BOJ)意外升息,2024-07-31,2024-07-31,日銀宣佈將短期利率上調至0.25%，並縮減購債規模，超預期鷹派立場開啟日圓漲勢並衝擊全球股市。,https://www.reuters.com/markets/asia/boj-raises-rates-025-flags-chance-further-hikes-2024-07-31/,
+自然災害,重大事件,0403 花蓮大地震,2024-04-03,2024-04-03,台灣發生規模7.2強震，半導體產業短期停工檢修引發市場對供應鏈中斷的疑慮，台股當日小幅震盪。,https://www.bbc.com/news/world-asia-68719996,
+政策衝擊,貿易戰/關稅,2025「解放日」大崩盤,2025-04-02,2025-04-15,美國總統川普宣布全面性高額關稅，標普500一週內重挫近20%，台股因32%關稅威脅觸發熔斷機制。,https://www.bloomberg.com/news/articles/2025-04-02/trump-announces-sweeping-tariffs-global-markets-plunge,
+地緣政治,戰爭衝突,2026 中東美伊戰爭升溫,2026-03-15,2026-03-31,美伊衝突升溫導致油價飆升至100美元以上，引發全球通膨復燃恐慌，台股於3/31單日重挫795點。,https://www.reuters.com/world/middle-east/iran-us-tensions-escalate-oil-surges-past-100-2026-03-20/,
+金融危機,泡沫破裂,AI 高估值泡沫修正,2026-01-15,2026-03-31,隨著利率維持高檔，AI硬體投資增速放緩，高估值半導體股出現顯著修正，費半指數修正逾15%。,https://www.cnbc.com/2026/03/25/ai-stock-bubble-bursts-chip-stocks-tumble.html,

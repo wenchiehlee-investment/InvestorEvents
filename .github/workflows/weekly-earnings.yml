@@ -26,7 +26,9 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install requests urllib3 yfinance python-dotenv
+        run: |
+          pip install requests urllib3 yfinance python-dotenv
+          pip install "llm @ git+https://github.com/wenchiehlee/llm.git"
 
       - name: Run fetch
         run: python fetch_upcoming_earnings.py

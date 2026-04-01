@@ -10,34 +10,36 @@ OUTPUT_FILE = "historical_crashes.csv"
 CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
 
 PROMPT = """
-You are a financial historian.
+You are a financial historian specializing in modern market volatility.
 
-Task: Search for and extract a list of the TOP 100 CRITICAL historical events from 1990 to the present that caused significant stock market drops (crashes, corrections, or bear markets) in either the Global (US) or Taiwan markets.
+Task: Search for and extract a list of CRITICAL events from 2020-01-01 to 2026-04-01 that caused significant stock market drops (crashes, corrections, or bear markets) in either the Global (US) or Taiwan markets.
+
+Special Focus (2024-2026):
+- 2024-08-05: Black Monday / Yen Carry Trade Unwind (日圓套利交易平倉引發全球崩盤)
+- 2024-04-19: Israel-Iran Conflict Escalation (以色列-伊朗衝突升級導致台股創紀錄大跌)
+- 2024-01-01: Noto Peninsula Earthquake (能登半島地震)
+- 2024-04-03: Hualien Earthquake (0403 花蓮大地震)
+- 2024-10-01: Middle East War Expansion (中東戰火擴大)
+- 2025-01-20: New US Administration Policy Shocks (新任美國政府政策衝擊/關稅政策)
 
 Focus on these specific Categories (類別) and Sub-categories (子類別):
 
 1. 金融危機 (Financial Crisis):
-   - 亞洲金融風暴 (Asian Financial Crisis)
-   - 網路泡沫 (Dot-com Bubble)
-   - 次貸危機 (Subprime Crisis / Global Financial Crisis)
-   - 歐債危機 (European Debt Crisis)
-   - 銀行倒閉 (Bank Failure)
+   - 銀行倒閉 (Bank Failure) - e.g., Silicon Valley Bank (2023)
+   - 日圓套利交易平倉 (Yen Carry Trade Unwind - 2024)
 
 2. 公共衛生 (Public Health):
-   - 傳染病爆發 (Pandemic) - e.g., SARS, COVID-19
+   - 傳染病爆發 (Pandemic) - COVID-19 (2020-2022)
 
 3. 地緣政治 (Geopolitics):
-   - 恐怖攻擊 (Terrorist Attack) - e.g., 911
-   - 戰爭衝突 (War & Conflict) - e.g., Persian Gulf War, Russia-Ukraine
-   - 貿易戰 (Trade War)
-   - 政治黑天鵝 (Political Black Swan) - e.g., Brexit, 1996 Taiwan Strait Crisis (台海飛彈危機)
+   - 戰爭衝突 (War & Conflict) - Russia-Ukraine (2022), Israel-Hamas (2023-2024)
+   - 貿易戰/制裁 (Trade War & Sanctions) - US-China AI Chip Bans (2024)
 
 4. 自然災害 (Natural Disaster):
-   - 重大震災 (Major Earthquake) - e.g., 921 Earthquake, 311 Japan Earthquake
+   - 重大事件 (Major Events) - e.g., Hualien Earthquake (2024)
 
 5. 政策衝擊 (Policy Shock):
-   - 貨幣政策 (Monetary Policy) - e.g., Aggressive Rate Hikes
-   - 證所稅事件 (Stock Transaction Tax) - Specific to Taiwan (1990)
+   - 貨幣政策 (Monetary Policy) - Aggressive Fed Rate Hikes (2022-2023), BOJ Rate Hike (2024)
 
 Output Format:
 Produce a valid CSV file content with the following headers:
@@ -46,13 +48,9 @@ Produce a valid CSV file content with the following headers:
 Requirements:
 - Language: All text must be in Traditional Chinese (繁體中文).
 - Dates: Format YYYY-MM-DD.
-- "備註" (Note): Briefly explain the impact (e.g., "跌幅達...").
+- "備註" (Note): Briefly explain the impact (e.g., "台股單日重挫...").
 - "Link1": MANDATORY. Provide a reliable source URL.
-- Quantity & Distribution: Find roughly 40 events in total, distributed as follows:
-    * 1990-1999: ~10 events
-    * 2000-2009: ~10 events
-    * 2010-2019: ~10 events
-    * 2020-Present: ~10 events
+- Quantity: Find about 20 high-quality events from 2020 to 2026.
 - Do not include markdown code block markers.
 """
 
