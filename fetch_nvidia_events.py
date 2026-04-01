@@ -6,7 +6,7 @@ from llm import LLMClient
 
 load_dotenv()
 
-OUTPUT_FILE = "nvidia_events.csv"
+OUTPUT_FILE = "raw_event_nvidia_events.csv"
 CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
 
 PROMPT = """

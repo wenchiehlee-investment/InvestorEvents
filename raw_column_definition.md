@@ -76,3 +76,27 @@
 ### File Characteristics:
 - **Standalone file**: No GoodInfo metadata columns.
 - **Update Frequency**: On-demand or periodic updates.
+
+---
+
+## raw_event_nvidia_events.csv (NVIDIA Product & Business Milestones)
+**No:** 63
+**Source:** `fetch_nvidia_events.py` via LLM / Financial News
+**Extraction Strategy:** Uses LLM to identify critical NVIDIA-specific events (GPU launches, business milestones, financial results) that moved the needle for AI infrastructure.
+
+### Column Definitions:
+
+| Column | Type | Description | Example |
+|--------|------|-------------|---------|
+| `類別` | string | Event category | `硬體發布`, `財務里程碑` |
+| `子類別` | string | Detailed event type | `GPU 產品`, `營收突破` |
+| `事件名稱` | string | Event name | `H100 Announcement` |
+| `開始日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
+| `結束日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
+| `備註` | string | Business impact | `NVIDIA Hopper 架構發布，奠定 AI 算力基礎...` |
+| `Link1` | url | Primary source link | `https://example.com/source1` |
+| `Link2` | url | Secondary source link | `https://example.com/source2` |
+
+### File Characteristics:
+- **Standalone file**: No GoodInfo metadata columns.
+- **Update Frequency**: On-demand or periodic updates.
