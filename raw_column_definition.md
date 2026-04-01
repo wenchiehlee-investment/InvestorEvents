@@ -28,3 +28,27 @@
 - **Standalone file**: Does not include standard GoodInfo metadata columns.
 - **Sync Destination**: Synchronized to `InvestorConference` for portal display.
 - **Update Frequency**: Weekly or on-demand via `weekly-earnings.yml`.
+
+---
+
+## raw_event_historical_crashes.csv (Historical Market Crashes)
+**No:** 61
+**Source:** `fetch_historical_crashes.py` via LLM / Financial News
+**Extraction Strategy:** Uses LLM to identify and describe significant market corrections and crashes from 2020 to 2026.
+
+### Column Definitions:
+
+| Column | Type | Description | Example |
+|--------|------|-------------|---------|
+| `類別` | string | Event category | `金融危機`, `地緣政治` |
+| `子類別` | string | Detailed event type | `日圓套利交易平倉`, `戰爭衝突` |
+| `事件名稱` | string | Event name | `Black Monday / Yen Carry Trade Unwind` |
+| `開始日期` | date | Crash start date (YYYY-MM-DD) | `2024-08-05` |
+| `結束日期` | date | Crash end date (YYYY-MM-DD) | `2024-08-05` |
+| `備註` | string | Impact description | `日圓套利交易平倉引發全球崩盤...` |
+| `Link1` | url | Primary source link | `https://example.com/source1` |
+| `Link2` | url | Secondary source link | `https://example.com/source2` |
+
+### File Characteristics:
+- **Standalone file**: No GoodInfo metadata columns.
+- **Update Frequency**: On-demand or scheduled periodic updates.
