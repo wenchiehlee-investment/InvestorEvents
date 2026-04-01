@@ -22,7 +22,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv()
 
-OUTPUT_FILE = "upcoming_earnings.csv"
+OUTPUT_FILE = "raw_event_upcoming_earnings.csv"
 CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
 
 # 監控的美股清單：從 raw_conceptstock_company_metadata.csv 動態載入

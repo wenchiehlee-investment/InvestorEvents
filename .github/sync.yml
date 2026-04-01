@@ -1,6 +1,6 @@
 group:
   - files:
-      - source: upcoming_earnings.csv
-        dest: upcoming_earnings.csv
+      - source: raw_event_upcoming_earnings.csv
+        dest: raw_event_upcoming_earnings.csv
     repos: |
       wenchiehlee-money/InvestorConference

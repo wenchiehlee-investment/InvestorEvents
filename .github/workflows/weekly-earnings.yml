@@ -38,12 +38,12 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add upcoming_earnings.csv
+          git add raw_event_upcoming_earnings.csv
           if git diff --cached --quiet; then
             echo "No changes to commit."
             echo "changed=false" >> $GITHUB_OUTPUT
           else
-            git commit -m "chore: weekly update upcoming_earnings.csv [skip ci]"
+            git commit -m "chore: weekly update raw_event_upcoming_earnings.csv [skip ci]"
             git push
             echo "changed=true" >> $GITHUB_OUTPUT
           fi

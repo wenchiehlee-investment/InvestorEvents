@@ -3,7 +3,7 @@ name: Sync upcoming_earnings → InvestorConference
 on:
   push:
     paths:
-      - 'upcoming_earnings.csv'
+      - 'raw_event_upcoming_earnings.csv'
   workflow_dispatch:
 
 concurrency:
