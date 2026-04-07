@@ -1,0 +1,49 @@
+name: Weekly Dividend Announcement Fetch
+
+on:
+  schedule:
+    # Every Monday 01:30 UTC = 09:30 Taipei time
+    - cron: "30 1 * * 1"
+  workflow_dispatch:  # allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install requests urllib3 yfinance python-dotenv
+
+      - name: Run fetch
+        # This takes ~15-20 minutes due to sequential material info queries
+        run: python fetch_dividends_announce.py
+
+      - name: Commit updated CSV
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add raw_event_dividends_announce.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore: weekly update raw_event_dividends_announce.csv [skip ci]"
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
