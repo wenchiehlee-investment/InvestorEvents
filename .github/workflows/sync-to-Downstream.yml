@@ -5,6 +5,7 @@ on:
     paths:
       - 'raw_event_upcoming_earnings.csv'
       - 'raw_event_historical_crashes.csv'
+      - 'raw_column_definition.md'
   workflow_dispatch:
 
 concurrency:
@@ -22,7 +23,7 @@ jobs:
         uses: BetaHuhn/repo-file-sync-action@latest
         with:
           GH_PAT: ${{ secrets.REPO_FILE_SYNC_WENCHIEHLEE_MONEY }}
-          CONFIG_PATH: .github/sync.yml
+          CONFIG_PATH: .github/sync-to-Downstream.yml
           COMMIT_EACH_FILE: false
           PR_LABELS: "automated-sync"
           SKIP_PR: true
