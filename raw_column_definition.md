@@ -1,9 +1,10 @@
+---
+source: https://raw.githubusercontent.com/wenchiehlee-investment/InvestorEvents/refs/heads/main/raw_column_definition.md
+destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Actions.GoodInfo.Analyzer/refs/heads/main/raw_column_definition.md
+---
+
 # Raw CSV Column Definitions - InvestorEvents
 ## Events and Earnings Calendar Data
-
-### Version History:
-- **v1.0.0** (2026-04-01): Initial column definition for upcoming earnings events.
-- **v1.1.0** (2026-04-01): Added historical crashes, AI events, NVIDIA milestones, and critical stock market events.
 
 ---
 
@@ -25,11 +26,6 @@
 | `Link1` | url | Primary reference link (e.g., Yahoo Financials) | `https://finance.yahoo.com/quote/2330.TW/financials/` |
 | `Link2` | url | Secondary reference link (e.g., Yahoo Earnings Calendar) | `https://finance.yahoo.com/calendar/earnings?symbol=2330.TW` |
 
-### File Characteristics:
-- **Standalone file**: Does not include standard GoodInfo metadata columns.
-- **Sync Destination**: Synchronized to `InvestorConference` for portal display.
-- **Update Frequency**: Weekly or on-demand via `weekly-earnings.yml`.
-
 ---
 
 ## raw_event_historical_crashes.csv (Historical Market Crashes)
@@ -47,19 +43,12 @@
 | `開始日期` | date | Crash start date (YYYY-MM-DD) | `2024-08-05` |
 | `結束日期` | date | Crash end date (YYYY-MM-DD) | `2024-08-05` |
 | `備註` | string | Impact description | `日圓套利交易平倉引發全球崩盤...` |
-| `Link1` | url | Primary source link | `https://example.com/source1` |
-| `Link2` | url | Secondary source link | `https://example.com/source2` |
-
-### File Characteristics:
-- **Standalone file**: No GoodInfo metadata columns.
-- **Update Frequency**: On-demand or scheduled periodic updates.
 
 ---
 
 ## raw_event_ai_events.csv (AI Technology & Market Events)
 **No:** 62
 **Source:** `fetch_ai_events.py` via LLM / Financial News
-**Extraction Strategy:** Uses LLM to identify critical AI-related events (product launches, M&A, model releases) that impacted the market.
 
 ### Column Definitions:
 
@@ -71,19 +60,12 @@
 | `開始日期` | date | Event start date (YYYY-MM-DD) | `2022-11-30` |
 | `結束日期` | date | Event end date (YYYY-MM-DD) | `2022-11-30` |
 | `備註` | string | Business/Market impact | `引發全球 AI 軍備競賽...` |
-| `Link1` | url | Primary source link | `https://example.com/source1` |
-| `Link2` | url | Secondary source link | `https://example.com/source2` |
-
-### File Characteristics:
-- **Standalone file**: No GoodInfo metadata columns.
-- **Update Frequency**: On-demand or periodic updates.
 
 ---
 
 ## raw_event_nvidia_events.csv (NVIDIA Product & Business Milestones)
 **No:** 63
 **Source:** `fetch_nvidia_events.py` via LLM / Financial News
-**Extraction Strategy:** Uses LLM to identify critical NVIDIA-specific events (GPU launches, business milestones, financial results) that moved the needle for AI infrastructure.
 
 ### Column Definitions:
 
@@ -95,19 +77,12 @@
 | `開始日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
 | `結束日期` | date | Event date (YYYY-MM-DD) | `2022-03-22` |
 | `備註` | string | Business impact | `NVIDIA Hopper 架構發布，奠定 AI 算力基礎...` |
-| `Link1` | url | Primary source link | `https://example.com/source1` |
-| `Link2` | url | Secondary source link | `https://example.com/source2` |
-
-### File Characteristics:
-- **Standalone file**: No GoodInfo metadata columns.
-- **Update Frequency**: On-demand or periodic updates.
 
 ---
 
 ## raw_event_stock_events.csv (Critical Stock Market Events)
 **No:** 64
 **Source:** `fetch_stock_events.py` via LLM / Financial News
-**Extraction Strategy:** Uses LLM to identify high-impact stock market events (structural changes, major bubbles, sector rotations) from 1990 to the present.
 
 ### Column Definitions:
 
@@ -119,9 +94,3 @@
 | `開始日期` | date | Event date (YYYY-MM-DD) | `2000-03-10` |
 | `結束日期` | date | Event date (YYYY-MM-DD) | `2002-10-09` |
 | `備註` | string | Business impact | `網際網路泡沫破裂，導致納斯達克指數重挫...` |
-| `Link1` | url | Primary source link | `https://example.com/source1` |
-| `Link2` | url | Secondary source link | `https://example.com/source2` |
-
-### File Characteristics:
-- **Standalone file**: No GoodInfo metadata columns.
-- **Update Frequency**: On-demand or periodic updates.
