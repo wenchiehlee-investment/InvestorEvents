@@ -114,6 +114,28 @@ def _normalize_fashuohui_name(event_name: str, date_str: str, category: str) -> 
         return event_name
 
 
+def _normalize_earnings_name(event_name: str, date_str: str, category: str) -> str:
+    """確保財報公告事件名稱包含季度，例如 'Apple Inc.(AAPL) 2026 Q1 財報'。
+    若已含 'YYYY Qn' 則直接回傳；否則根據日期插入季度。
+    季度推算規則（與法說會相同）：
+      1–3 月 → 前一年 Q4、4–6 月 → 當年 Q1、7–9 月 → 當年 Q2、10–12 月 → 當年 Q3
+    """
+    if category != "財報公告":
+        return event_name
+    if _QUARTER_RE.search(event_name):
+        return event_name  # 已包含季度，不重複加
+    suffix = " 財報"
+    if not event_name.endswith(suffix):
+        return event_name
+    try:
+        event_date = datetime.strptime(date_str, "%Y-%m-%d")
+        quarter = _quarter_label(event_date)
+        base = event_name[: -len(suffix)]
+        return f"{base} {quarter} 財報"
+    except Exception:
+        return event_name
+
+
 def _date_range_30() -> tuple[datetime, datetime]:
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     return today - timedelta(days=30), today + timedelta(days=30)
@@ -252,9 +274,10 @@ def _extract_earnings_dates(symbol: str, company: str, market: str,
         if start <= dt <= end:
             date_str = dt.strftime("%Y-%m-%d")
             display = symbol.replace(".TW", "").replace(".TWO", "")
+            quarter = _quarter_label(dt)
             rows.append([
                 "財報公告", market,
-                f"{company}({display}) 財報",
+                f"{company}({display}) {quarter} 財報",
                 date_str, date_str,
                 f"{company} 發布季度財報",
                 f"https://finance.yahoo.com/quote/{symbol}/financials/",
@@ -326,6 +349,7 @@ def save_csv(rows: list[list], output_file: str) -> None:
                         continue  # skip header
                     if len(row) >= 4:
                         row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
+                        row[2] = _normalize_earnings_name(row[2], row[3], row[0])
                         existing_rows.append(row)
         except Exception as e:
             print(f"Warning: Could not read existing file: {e}")
