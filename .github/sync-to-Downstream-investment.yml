@@ -5,9 +5,4 @@ group:
       - source: raw_column_definition.md
         dest: definitions/raw_column_definition_InvestorEvents.md
     repos: |
-      wenchiehlee-money/InvestorConference
-  - files:
-      - source: raw_event_historical_crashes.csv
-        dest: raw_event_historical_crashes.csv
-    repos: |
-      wenchiehlee-money/VIX
+      wenchiehlee-investment/Python-Actions.GoodInfo.Analyzer
