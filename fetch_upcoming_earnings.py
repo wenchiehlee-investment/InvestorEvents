@@ -72,6 +72,47 @@ def _load_tw_watchlist(csv_path: str) -> dict[str, str]:
 MOPS_BASE_URL       = "https://mops.twse.com.tw/mops/#/web/t100sb07_1"
 MOPS_REDIRECT_URL   = "https://mops.twse.com.tw/mops/api/redirectToOld"
 
+_QUARTER_RE = re.compile(r'\d{4}\s+Q[1-4]')
+
+
+def _quarter_label(event_date: datetime) -> str:
+    """從事件日期推算季度標籤，例如 '2026 Q1'。
+    法說會慣例：
+      1–3 月 → 前一年 Q4
+      4–6 月 → 當年 Q1
+      7–9 月 → 當年 Q2
+      10–12 月 → 當年 Q3
+    """
+    m = event_date.month
+    if m <= 3:
+        return f"{event_date.year - 1} Q4"
+    elif m <= 6:
+        return f"{event_date.year} Q1"
+    elif m <= 9:
+        return f"{event_date.year} Q2"
+    else:
+        return f"{event_date.year} Q3"
+
+
+def _normalize_fashuohui_name(event_name: str, date_str: str, category: str) -> str:
+    """確保法說會事件名稱包含季度，例如 '台積電(2330) 2026 Q1 法說會'。
+    若已含 'YYYY Qn' 則直接回傳；否則根據日期插入季度。
+    """
+    if category != "法說會":
+        return event_name
+    if _QUARTER_RE.search(event_name):
+        return event_name  # 已包含季度，不重複加
+    suffix = " 法說會"
+    if not event_name.endswith(suffix):
+        return event_name
+    try:
+        event_date = datetime.strptime(date_str, "%Y-%m-%d")
+        quarter = _quarter_label(event_date)
+        base = event_name[: -len(suffix)]
+        return f"{base} {quarter} 法說會"
+    except Exception:
+        return event_name
+
 
 def _date_range_30() -> tuple[datetime, datetime]:
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -96,7 +137,8 @@ def _parse_mops_company_html(html: str, code: str, name: str,
         if not (start <= event_date <= end):
             continue
         date_str = event_date.strftime("%Y-%m-%d")
-        event_name = f"{name}({code}) 法說會"
+        quarter = _quarter_label(event_date)
+        event_name = f"{name}({code}) {quarter} 法說會"
         rows.append([
             "法說會", "台股", event_name, date_str, date_str,
             f"{name}（{code}）舉辦法人說明會",
@@ -260,12 +302,9 @@ def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
         # If empty, retry with .TWO (TPEX/OTC stocks use .TWO on Yahoo Finance)
         if not rows and symbol.endswith(".TW"):
             alt = symbol[:-3] + ".TWO"
-            try:
-                rows = _extract_earnings_dates(alt, company, "台股", start, end)
-                if rows:
-                    tpex_fallbacks += 1
-            except Exception as e:
-                print(f"  {symbol} / {alt} 財報日期抓取失敗: {e}")
+            rows = _extract_earnings_dates_quiet(alt, company, "台股", start, end)
+            if rows:
+                tpex_fallbacks += 1
         results.extend(rows)
     if tpex_fallbacks:
         print(f"        ({tpex_fallbacks} stocks resolved via .TWO fallback)")
@@ -286,6 +325,7 @@ def save_csv(rows: list[list], output_file: str) -> None:
                     if i == 0:
                         continue  # skip header
                     if len(row) >= 4:
+                        row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
                         existing_rows.append(row)
         except Exception as e:
             print(f"Warning: Could not read existing file: {e}")
