@@ -1,4 +1,6 @@
 ﻿類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
+財報公告,美股,NVIDIA Corporation(NVDA) 2026 Q1 財報,2026-05-20,2026-05-20,NVIDIA Corporation 發布季度財報,https://finance.yahoo.com/quote/NVDA/financials/,https://finance.yahoo.com/calendar/earnings?symbol=NVDA
+財報公告,台股,華碩(2357) 2026 Q1 財報,2026-05-20,2026-05-20,華碩 發布季度財報,https://finance.yahoo.com/quote/2357.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2357.TW
 財報公告,台股,鴻海(2317) 2026 Q1 財報,2026-05-14,2026-05-14,鴻海 發布季度財報,https://finance.yahoo.com/quote/2317.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2317.TW
 財報公告,台股,仁寶(2324) 2026 Q1 財報,2026-05-14,2026-05-14,仁寶 發布季度財報,https://finance.yahoo.com/quote/2324.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2324.TW
 財報公告,台股,技嘉(2376) 2026 Q1 財報,2026-05-14,2026-05-14,技嘉 發布季度財報,https://finance.yahoo.com/quote/2376.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2376.TW
@@ -14,6 +16,7 @@
 財報公告,台股,京元電子(2449) 2026 Q1 財報,2026-05-08,2026-05-08,京元電子 發布季度財報,https://finance.yahoo.com/quote/2449.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2449.TW
 財報公告,台股,世芯-KY(3661) 2026 Q1 財報,2026-05-08,2026-05-08,世芯-KY 發布季度財報,https://finance.yahoo.com/quote/3661.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=3661.TW
 財報公告,台股,玉山金(2884) 2026 Q1 財報,2026-05-08,2026-05-08,玉山金 發布季度財報,https://finance.yahoo.com/quote/2884.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2884.TW
+法說會,台股,群聯(8299) 2026 Q1 法說會,2026-05-08,2026-05-08,群聯（8299）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,中華電(2412) 2026 Q1 法說會,2026-05-07,2026-05-07,中華電（2412）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,台股,中華電(2412) 2026 Q1 財報,2026-05-07,2026-05-07,中華電 發布季度財報,https://finance.yahoo.com/quote/2412.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2412.TW
 財報公告,台股,可成(2474) 2026 Q1 財報,2026-05-07,2026-05-07,可成 發布季度財報,https://finance.yahoo.com/quote/2474.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2474.TW
@@ -33,6 +36,7 @@
 法說會,台股,聯發科(2454) 2026 Q1 法說會,2026-04-30,2026-04-30,聯發科（2454）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 法說會,台股,台達電(2308) 2026 Q1 法說會,2026-04-30,2026-04-30,台達電（2308）舉辦法人說明會,https://mops.twse.com.tw/mops/#/web/t100sb07_1,
 財報公告,美股,Western Digital(WDC) 2026 Q1 財報,2026-04-30,2026-04-30,Western Digital 發布季度財報,https://finance.yahoo.com/quote/WDC/financials/,https://finance.yahoo.com/calendar/earnings?symbol=WDC
+財報公告,台股,聯發科(2454) 2026 Q1 財報,2026-04-30,2026-04-30,聯發科 發布季度財報,https://finance.yahoo.com/quote/2454.TW/financials/,https://finance.yahoo.com/calendar/earnings?symbol=2454.TW
 財報公告,美股,Meta Platforms Inc.(META) 2026 Q1 財報,2026-04-29,2026-04-29,Meta Platforms Inc. 發布季度財報,https://finance.yahoo.com/quote/META/financials/,https://finance.yahoo.com/calendar/earnings?symbol=META
 財報公告,美股,Microsoft Corporation(MSFT) 2026 Q1 財報,2026-04-29,2026-04-29,Microsoft Corporation 發布季度財報,https://finance.yahoo.com/quote/MSFT/financials/,https://finance.yahoo.com/calendar/earnings?symbol=MSFT
 財報公告,美股,Qualcomm Inc.(QCOM) 2026 Q1 財報,2026-04-29,2026-04-29,Qualcomm Inc. 發布季度財報,https://finance.yahoo.com/quote/QCOM/financials/,https://finance.yahoo.com/calendar/earnings?symbol=QCOM
