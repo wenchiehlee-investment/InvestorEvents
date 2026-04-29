@@ -1,13 +1,17 @@
 import os
 import csv
 import io
+from datetime import datetime
 from dotenv import load_dotenv
 from llm import LLMClient
 
 load_dotenv()
 
 OUTPUT_FILE = "raw_event_historical_crashes.csv"
-CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
+CSV_HEADERS = [
+    "類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2",
+    "download_timestamp", "process_timestamp"
+]
 
 PROMPT = """
 You are a financial historian specializing in modern market volatility.
@@ -65,23 +69,23 @@ def clean_csv(text: str) -> str:
 
 
 def save_csv(csv_content: str, output_file: str) -> None:
+    process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     new_rows = []
     header = None
     try:
         reader = csv.reader(io.StringIO(csv_content))
         rows = list(reader)
         if rows:
-            header = rows[0]
+            header = list(CSV_HEADERS)
             new_rows = rows[1:]
     except csv.Error as e:
         print(f"Error parsing CSV response: {e}")
         return
 
     existing_keys: set = set()
-    write_header = True
+    existing_rows = []
 
     if os.path.exists(output_file):
-        write_header = False
         try:
             with open(output_file, "r", encoding="utf-8-sig") as f:
                 reader = csv.reader(f)
@@ -89,6 +93,11 @@ def save_csv(csv_content: str, output_file: str) -> None:
                     if i == 0:
                         continue
                     if len(row) >= 4:
+                        while len(row) < len(CSV_HEADERS):
+                            row.append(process_timestamp)
+                        row[-2] = process_timestamp
+                        row[-1] = process_timestamp
+                        existing_rows.append(row)
                         existing_keys.add((row[2].strip(), row[3].strip()))
         except Exception as e:
             print(f"Warning: Could not read existing file for deduplication: {e}")
@@ -98,16 +107,19 @@ def save_csv(csv_content: str, output_file: str) -> None:
         if len(row) >= 4:
             key = (row[2].strip(), row[3].strip())
             if key not in existing_keys:
+                while len(row) < len(CSV_HEADERS):
+                    row.append(process_timestamp)
+                row[-2] = process_timestamp
+                row[-1] = process_timestamp
                 rows_to_write.append(row)
                 existing_keys.add(key)
 
-    if rows_to_write:
-        mode = "a" if os.path.exists(output_file) else "w"
-        with open(output_file, mode, encoding="utf-8-sig", newline="") as f:
+    if rows_to_write or existing_rows:
+        with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f)
-            if write_header and header:
-                writer.writerow(header)
-            writer.writerows(rows_to_write)
+            writer.writerow(header or CSV_HEADERS)
+            writer.writerows(existing_rows + rows_to_write)
+    if rows_to_write:
         print(f"Appended {len(rows_to_write)} new events to '{output_file}'.")
     else:
         print(f"No new unique events to append to '{output_file}'.")

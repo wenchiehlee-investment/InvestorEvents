@@ -23,7 +23,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv()
 
 OUTPUT_FILE = "raw_event_upcoming_earnings.csv"
-CSV_HEADERS = ["類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"]
+CSV_HEADERS = [
+    "類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2",
+    "download_timestamp", "process_timestamp"
+]
 
 # 監控的美股清單：從 raw_conceptstock_company_metadata.csv 動態載入
 # 來源：wenchiehlee-investment/ConceptStocks
@@ -338,6 +341,8 @@ def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
 
 def save_csv(rows: list[list], output_file: str) -> None:
     """Merge new rows into the CSV, deduplicate, sort by date descending, rewrite."""
+    process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
     # 1. 讀取現有資料
     existing_rows: list[list] = []
     if os.path.exists(output_file):
@@ -350,6 +355,10 @@ def save_csv(rows: list[list], output_file: str) -> None:
                     if len(row) >= 4:
                         row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
                         row[2] = _normalize_earnings_name(row[2], row[3], row[0])
+                        while len(row) < len(CSV_HEADERS):
+                            row.append(process_timestamp)
+                        row[-2] = process_timestamp
+                        row[-1] = process_timestamp
                         existing_rows.append(row)
         except Exception as e:
             print(f"Warning: Could not read existing file: {e}")
@@ -369,6 +378,10 @@ def save_csv(rows: list[list], output_file: str) -> None:
             key = (row[2].strip(), row[3].strip())
             if key not in seen:
                 seen.add(key)
+                while len(row) < len(CSV_HEADERS):
+                    row.append(process_timestamp)
+                row[-2] = process_timestamp
+                row[-1] = process_timestamp
                 merged.append(row)
                 added += 1
 
