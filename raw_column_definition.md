@@ -25,6 +25,8 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 | `備註` | string | Additional details | `台積電 發布季度財報` |
 | `Link1` | url | Primary reference link (e.g., Yahoo Financials) | `https://finance.yahoo.com/quote/2330.TW/financials/` |
 | `Link2` | url | Secondary reference link (e.g., Yahoo Earnings Calendar) | `https://finance.yahoo.com/calendar/earnings?symbol=2330.TW` |
+| `download_timestamp` | datetime | Source data retrieval timestamp | `2026-04-29 04:10:25` |
+| `process_timestamp` | datetime | CSV generation timestamp | `2026-04-29 04:10:25` |
 
 ---
 
@@ -43,6 +45,10 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 | `開始日期` | date | Crash start date (YYYY-MM-DD) | `2024-08-05` |
 | `結束日期` | date | Crash end date (YYYY-MM-DD) | `2024-08-05` |
 | `備註` | string | Impact description | `日圓套利交易平倉引發全球崩盤...` |
+| `Link1` | url | Primary reference link | `https://...` |
+| `Link2` | url | Secondary reference link | `https://...` |
+| `download_timestamp` | datetime | Source data retrieval timestamp | `2026-04-29 04:10:25` |
+| `process_timestamp` | datetime | CSV generation timestamp | `2026-04-29 04:10:25` |
 
 ---
 
