@@ -9,5 +9,7 @@ group:
   - files:
       - source: raw_event_historical_crashes.csv
         dest: raw_event_historical_crashes.csv
+      - source: raw_column_definition.md
+        dest: definitions/raw_column_definition_InvestorEvents.md
     repos: |
       wenchiehlee-money/VIX
