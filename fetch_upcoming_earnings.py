@@ -141,7 +141,7 @@ def _normalize_earnings_name(event_name: str, date_str: str, category: str) -> s
 
 def _date_range_30() -> tuple[datetime, datetime]:
     today = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-    return today - timedelta(days=30), today + timedelta(days=30)
+    return today - timedelta(days=30), today + timedelta(days=60)
 
 
 # ── Taiwan 法說會 (MOPS) ─────────────────────────────────────────────────────
