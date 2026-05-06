@@ -1,8 +1,6 @@
 name: Sync Events to Downstream
 
 on:
-  schedule:
-    - cron: '0 1 * * *'  # 每日 09:00 台北時間
   push:
     paths:
       - 'raw_event_upcoming_earnings.csv'
