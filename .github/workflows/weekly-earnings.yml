@@ -1,9 +1,9 @@
-name: Weekly Earnings & 法說會 Fetch
+name: Daily Earnings & 法說會 Fetch
 
 on:
   schedule:
-    # Every Monday 01:00 UTC = 09:00 Taipei time
-    - cron: "0 1 * * 1"
+    # Every day 01:00 UTC = 09:00 Taipei time
+    - cron: "0 1 * * *"
   workflow_dispatch:  # allow manual trigger
 
 permissions:
