@@ -436,4 +436,19 @@ def generate_upcoming_earnings() -> None:
 
 
 if __name__ == "__main__":
-    generate_upcoming_earnings()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start", type=str, help="Start date YYYY-MM-DD (default: today-30d)")
+    parser.add_argument("--end",   type=str, help="End date YYYY-MM-DD (default: today+60d)")
+    args = parser.parse_args()
+
+    if args.start or args.end:
+        _start = datetime.strptime(args.start, "%Y-%m-%d") if args.start else _date_range_30()[0]
+        _end   = datetime.strptime(args.end,   "%Y-%m-%d") if args.end   else _date_range_30()[1]
+        # Temporarily override _date_range_30 for generate_upcoming_earnings
+        _orig = _date_range_30
+        def _date_range_30(): return _start, _end  # noqa: E306
+        generate_upcoming_earnings()
+        _date_range_30 = _orig
+    else:
+        generate_upcoming_earnings()
