@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   fetch:
@@ -47,3 +48,9 @@ jobs:
             git push
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
+
+      - name: Trigger sync to downstream
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run sync-to-Downstream.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
