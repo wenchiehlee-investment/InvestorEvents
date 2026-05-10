@@ -339,12 +339,60 @@ def fetch_tw_earnings(start: datetime, end: datetime) -> list[list]:
 
 # ── CSV helpers ──────────────────────────────────────────────────────────────
 
+def _sync_tw_earnings_dates_from_mops(all_rows: list[list]) -> list[list]:
+    """Post-processing: for Taiwan 財報公告, if a matching MOPS 法說會 date exists
+    for the same company+quarter and the MOPS date is earlier, use MOPS date.
+
+    Background: yfinance often returns inaccurate estimated dates for Taiwan stocks.
+    The MOPS 法說會 date reflects the actual board meeting date (董事會), which is
+    also when the financial report is officially released — making it more reliable.
+    """
+    code_quarter_re = re.compile(r'\((\d{4,5})\)\s+(\d{4}\s+Q[1-4])')
+
+    # Build map {(stock_code, quarter): earliest_mops_date} from 法說會 entries
+    mops_dates: dict[tuple, str] = {}
+    for row in all_rows:
+        if row[0] == "法說會" and row[1] == "台股":
+            m = code_quarter_re.search(row[2])
+            if m:
+                key = (m.group(1), m.group(2))
+                existing = mops_dates.get(key)
+                if existing is None or row[3] < existing:
+                    mops_dates[key] = row[3]
+
+    if not mops_dates:
+        return all_rows
+
+    updated = 0
+    for row in all_rows:
+        if row[0] == "財報公告" and row[1] == "台股":
+            m = code_quarter_re.search(row[2])
+            if m:
+                key = (m.group(1), m.group(2))
+                mops_date = mops_dates.get(key)
+                if mops_date and mops_date < row[3]:
+                    print(f"  [DATE SYNC] {row[2]}: {row[3]} → {mops_date} (從 MOPS 法說會修正)")
+                    row[3] = mops_date
+                    row[4] = mops_date
+                    updated += 1
+
+    if updated:
+        print(f"  [DATE SYNC] 共修正 {updated} 筆台股財報日期（MOPS 法說會資料）")
+
+    return all_rows
+
+
 def save_csv(rows: list[list], output_file: str) -> None:
-    """Merge new rows into the CSV, deduplicate, sort by date descending, rewrite."""
+    """Merge new rows into the CSV, deduplicate by event name, sort by date descending, rewrite.
+
+    Deduplication key is event_name only (not event_name + date), so that corrected dates
+    from the current fetch can override stale dates stored in the existing CSV.
+    New rows take precedence over existing rows for the same event name.
+    """
     process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
-    # 1. 讀取現有資料
-    existing_rows: list[list] = []
+    # 1. 讀取現有資料，以事件名稱為 key 建立 lookup
+    existing_by_name: dict[str, list] = {}
     if os.path.exists(output_file):
         try:
             with open(output_file, "r", encoding="utf-8-sig") as f:
@@ -359,31 +407,34 @@ def save_csv(rows: list[list], output_file: str) -> None:
                             row.append(process_timestamp)
                         row[-2] = process_timestamp
                         row[-1] = process_timestamp
-                        existing_rows.append(row)
+                        name = row[2].strip()
+                        if name not in existing_by_name:
+                            existing_by_name[name] = row
         except Exception as e:
             print(f"Warning: Could not read existing file: {e}")
 
-    # 2. 合併，以 (事件名稱, 開始日期) 去重
-    seen: set = set()
-    merged: list[list] = []
-    for row in existing_rows:
-        key = (row[2].strip(), row[3].strip())
-        if key not in seen:
-            seen.add(key)
-            merged.append(row)
-
-    added = 0
+    # 2. 新資料覆蓋同名既有資料（允許日期更新），否則新增
+    added = updated_dates = 0
     for row in rows:
-        if len(row) >= 4:
-            key = (row[2].strip(), row[3].strip())
-            if key not in seen:
-                seen.add(key)
-                while len(row) < len(CSV_HEADERS):
-                    row.append(process_timestamp)
-                row[-2] = process_timestamp
-                row[-1] = process_timestamp
-                merged.append(row)
-                added += 1
+        if len(row) < 4:
+            continue
+        name = row[2].strip()
+        while len(row) < len(CSV_HEADERS):
+            row.append(process_timestamp)
+        row[-2] = process_timestamp
+        row[-1] = process_timestamp
+        if name in existing_by_name:
+            old_date = existing_by_name[name][3]
+            if old_date != row[3].strip():
+                print(f"  [DATE UPDATE] {name}: {old_date} → {row[3].strip()}")
+                existing_by_name[name][3] = row[3].strip()
+                existing_by_name[name][4] = row[4].strip()
+                updated_dates += 1
+        else:
+            existing_by_name[name] = row
+            added += 1
+
+    merged = list(existing_by_name.values())
 
     # 3. 日期降冪排序（新 → 舊）
     merged.sort(key=lambda r: r[3], reverse=True)
@@ -395,10 +446,15 @@ def save_csv(rows: list[list], output_file: str) -> None:
         writer.writerows(merged)
 
     total = len(merged)
+    parts = []
     if added:
-        print(f"Added {added} new events → CSV now has {total} rows.")
+        parts.append(f"新增 {added} 筆")
+    if updated_dates:
+        parts.append(f"更新日期 {updated_dates} 筆")
+    if parts:
+        print(f"{' / '.join(parts)} → CSV 共 {total} 筆。")
     else:
-        print(f"No new events. CSV unchanged at {total} rows.")
+        print(f"無變更。CSV 共 {total} 筆。")
 
 
 # ── main ─────────────────────────────────────────────────────────────────────
@@ -423,6 +479,9 @@ def generate_upcoming_earnings() -> None:
     tw_earn_rows = fetch_tw_earnings(start, end)
     print(f"        Found {len(tw_earn_rows)} Taiwan earnings events.")
     all_rows.extend(tw_earn_rows)
+
+    print("  [4/4] Syncing Taiwan 財報 dates from MOPS 法說會 data...")
+    all_rows = _sync_tw_earnings_dates_from_mops(all_rows)
 
     save_csv(all_rows, OUTPUT_FILE)
 

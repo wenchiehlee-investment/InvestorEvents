@@ -125,7 +125,7 @@ def generate_ai_events() -> None:
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate(PROMPT, max_tokens=16000))
+        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchAIEvents", PROMPT, draft_provider="codex"))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)

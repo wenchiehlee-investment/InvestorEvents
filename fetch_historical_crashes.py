@@ -131,7 +131,7 @@ def generate_historical_crashes() -> None:
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate(PROMPT))
+        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchHistoricalCrashes", PROMPT, draft_provider="codex"))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)

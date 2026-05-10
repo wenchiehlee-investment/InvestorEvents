@@ -132,7 +132,7 @@ def generate_nvidia_events() -> None:
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate(PROMPT, max_tokens=16000))
+        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchNvidiaEvents", PROMPT, draft_provider="codex"))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)

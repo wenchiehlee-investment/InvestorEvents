@@ -139,7 +139,7 @@ def generate_jensen_huang_talk_events() -> None:
     try:
         client = LLMClient(app_name="InvestorEvents")
         prompt = build_prompt()
-        csv_content = clean_csv(client.generate(prompt, max_tokens=8000))
+        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchJesenHuangTalkEvents", prompt, draft_provider="codex"))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)
