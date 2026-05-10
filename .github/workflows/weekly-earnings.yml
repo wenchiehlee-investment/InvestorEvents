@@ -43,7 +43,7 @@ jobs:
             echo "No changes to commit."
             echo "changed=false" >> $GITHUB_OUTPUT
           else
-            git commit -m "chore: weekly update raw_event_upcoming_earnings.csv [skip ci]"
+            git commit -m "chore: weekly update raw_event_upcoming_earnings.csv"
             git push
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
