@@ -76,6 +76,8 @@ MOPS_BASE_URL       = "https://mops.twse.com.tw/mops/#/web/t100sb07_1"
 MOPS_REDIRECT_URL   = "https://mops.twse.com.tw/mops/api/redirectToOld"
 
 _QUARTER_RE = re.compile(r'\d{4}\s+Q[1-4]')
+_FISCAL_QUARTER_RE = re.compile(r'FY\d{4}\s+Q[1-4]')
+_TICKER_RE = re.compile(r'\(([^()]+)\)')
 
 
 def _quarter_label(event_date: datetime) -> str:
@@ -137,6 +139,104 @@ def _normalize_earnings_name(event_name: str, date_str: str, category: str) -> s
         return f"{base} {quarter} 財報"
     except Exception:
         return event_name
+
+
+def _extract_event_ticker(event_name: str) -> str | None:
+    """Return the ticker/code from the final parenthesized token in an event name."""
+    matches = _TICKER_RE.findall(event_name)
+    if not matches:
+        return None
+    ticker = matches[-1].strip()
+    return ticker or None
+
+
+def _is_fiscal_quarter_name(event_name: str) -> bool:
+    return bool(_FISCAL_QUARTER_RE.search(event_name))
+
+
+def _earnings_row_score(row: list) -> tuple[int, int, int, int]:
+    """Higher score wins when duplicate earnings rows describe the same event."""
+    name = row[2] if len(row) > 2 else ""
+    ticker = _extract_event_ticker(name)
+    preferred_company = US_WATCHLIST.get(ticker, "") if ticker else ""
+    has_preferred_company = int(bool(preferred_company and name.startswith(f"{preferred_company}(")))
+    return (
+        int(_is_fiscal_quarter_name(name)),
+        has_preferred_company,
+        len(row[5]) if len(row) > 5 else 0,
+        len(name),
+    )
+
+
+def _merge_earnings_duplicate_rows(preferred: list, duplicate: list) -> list:
+    """Merge two same-company earnings rows, keeping the better label and a full date range."""
+    if _earnings_row_score(duplicate) > _earnings_row_score(preferred):
+        preferred, duplicate = duplicate, preferred
+
+    dates = [d for d in [preferred[3], preferred[4], duplicate[3], duplicate[4]] if d]
+    if dates:
+        preferred[3] = min(dates)
+        preferred[4] = max(dates)
+
+    return preferred
+
+
+def _dedupe_nearby_earnings_events(rows: list[list]) -> list[list]:
+    """Collapse duplicate 財報公告 rows for the same ticker on the same/next day.
+
+    yfinance may emit a calendar-quarter event while an existing/manual row already has
+    the correct fiscal-quarter label. Treat same ticker + market + category within one
+    day as the same earnings event and keep the more specific row.
+    """
+    grouped: dict[tuple[str, str, str], list[list]] = {}
+    passthrough: list[list] = []
+
+    for row in rows:
+        if len(row) < 4 or row[0] != "財報公告":
+            passthrough.append(row)
+            continue
+        ticker = _extract_event_ticker(row[2])
+        if not ticker:
+            passthrough.append(row)
+            continue
+        grouped.setdefault((row[0], row[1], ticker), []).append(row)
+
+    deduped = passthrough[:]
+    removed = 0
+
+    for group_rows in grouped.values():
+        parsed: list[tuple[datetime, list]] = []
+        unparsed: list[list] = []
+        for row in group_rows:
+            try:
+                parsed.append((datetime.strptime(row[3], "%Y-%m-%d"), row))
+            except Exception:
+                unparsed.append(row)
+
+        parsed.sort(key=lambda item: item[0])
+        clusters: list[list[list]] = []
+        for dt, row in parsed:
+            if not clusters:
+                clusters.append([row])
+                continue
+            last_date = datetime.strptime(clusters[-1][-1][3], "%Y-%m-%d")
+            if abs((dt - last_date).days) <= 1:
+                clusters[-1].append(row)
+            else:
+                clusters.append([row])
+
+        for cluster in clusters:
+            merged = cluster[0]
+            for row in cluster[1:]:
+                merged = _merge_earnings_duplicate_rows(merged, row)
+                removed += 1
+            deduped.append(merged)
+        deduped.extend(unparsed)
+
+    if removed:
+        print(f"  [DEDUP] 合併 {removed} 筆同 ticker、日期相近的財報重複事件")
+
+    return deduped
 
 
 def _date_range_30() -> tuple[datetime, datetime]:
@@ -418,6 +518,8 @@ def save_csv(rows: list[list], output_file: str) -> None:
     for row in rows:
         if len(row) < 4:
             continue
+        row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
+        row[2] = _normalize_earnings_name(row[2], row[3], row[0])
         name = row[2].strip()
         while len(row) < len(CSV_HEADERS):
             row.append(process_timestamp)
@@ -435,6 +537,7 @@ def save_csv(rows: list[list], output_file: str) -> None:
             added += 1
 
     merged = list(existing_by_name.values())
+    merged = _dedupe_nearby_earnings_events(merged)
 
     # 3. 日期降冪排序（新 → 舊）
     merged.sort(key=lambda r: r[3], reverse=True)
