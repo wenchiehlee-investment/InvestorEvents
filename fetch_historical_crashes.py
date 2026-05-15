@@ -67,6 +67,41 @@ def _clean_cell(v: str) -> str:
     return v
 
 
+def _row_score(row: list) -> int:
+    """Score row completeness: more non-empty fields + longer 備註 + valid Link1 = higher."""
+    score = sum(1 for cell in row if cell.strip())
+    if len(row) > 5:
+        score += len(row[5]) // 20
+    if len(row) > 6 and row[6].strip().startswith("http"):
+        score += 5
+    return score
+
+
+def _global_dedup(rows: list) -> list:
+    """Global dedup: group by 開始日期 only, keep the most complete row per start date.
+
+    Using start date as the sole key because:
+    - A crash event's start date is an objective historical fact (LLM rarely varies it).
+    - End dates vary across LLM runs, so (start, end) pairs leak near-duplicates.
+    """
+    from collections import defaultdict
+    groups: dict = defaultdict(list)
+    for row in rows:
+        start = row[3].strip() if len(row) > 3 else ""
+        groups[start].append(row)
+
+    result = []
+    removed = 0
+    for group_rows in groups.values():
+        best = max(group_rows, key=_row_score)
+        result.append(best)
+        removed += len(group_rows) - 1
+
+    if removed:
+        print(f"Global dedup removed {removed} duplicate row(s).")
+    return result
+
+
 def save_csv(csv_content: str, output_file: str) -> None:
     process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     new_rows = []
@@ -83,7 +118,6 @@ def save_csv(csv_content: str, output_file: str) -> None:
         print(f"Error parsing CSV response: {e}")
         return
 
-    existing_keys: set = set()
     existing_rows = []
 
     if os.path.exists(output_file):
@@ -99,39 +133,35 @@ def save_csv(csv_content: str, output_file: str) -> None:
                         if not row[-2]: row[-2] = process_timestamp
                         if not row[-1]: row[-1] = process_timestamp
                         existing_rows.append(row)
-                        existing_keys.add((row[2].strip(), row[3].strip()))
         except Exception as e:
-            print(f"Warning: Could not read existing file for deduplication: {e}")
+            print(f"Warning: Could not read existing file: {e}")
 
-    rows_to_write = []
+    valid_new_rows = []
     for row in new_rows:
         if len(row) >= 6 and date_pattern.match(row[3].strip()):
-            key = (row[2].strip(), row[3].strip())
-            if key not in existing_keys:
-                while len(row) < len(CSV_HEADERS):
-                    row.append(process_timestamp)
-                row[-2] = process_timestamp
-                row[-1] = process_timestamp
-                rows_to_write.append(row)
-                existing_keys.add(key)
+            while len(row) < len(CSV_HEADERS):
+                row.append(process_timestamp)
+            row[-2] = process_timestamp
+            row[-1] = process_timestamp
+            valid_new_rows.append(row)
         else:
             if any(cell.strip() for cell in row):
-                print(f"Skipping malformed or truncated row: {row}")
+                print(f"Skipping malformed row: {row}")
 
-    if rows_to_write or existing_rows:
-        all_rows = existing_rows + rows_to_write
-        # Sort by Start Date (index 3) descending (newest first)
-        all_rows.sort(key=lambda r: r[3] if len(r) > 3 else "", reverse=True)
-        
-        with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(header or CSV_HEADERS)
-            writer.writerows(all_rows)
-    
-    if rows_to_write:
-        print(f"Appended {len(rows_to_write)} new events to '{output_file}'.")
+    before_count = len(set(r[3] for r in existing_rows if len(r) > 3))
+    all_rows = _global_dedup(existing_rows + valid_new_rows)
+    all_rows.sort(key=lambda r: r[3] if len(r) > 3 else "", reverse=True)
+
+    with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header or CSV_HEADERS)
+        writer.writerows(all_rows)
+
+    added = len(all_rows) - before_count
+    if added > 0:
+        print(f"Appended {added} new event(s) to '{output_file}'. Total: {len(all_rows)}")
     else:
-        print(f"No new unique events to append to '{output_file}'.")
+        print(f"No new unique events added. Total after dedup: {len(all_rows)}")
 
 
 def generate_historical_crashes() -> None:
