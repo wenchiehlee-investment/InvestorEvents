@@ -14,37 +14,24 @@ CSV_HEADERS = [
     "download_timestamp", "process_timestamp"
 ]
 
-PROMPT = """
+
+def build_prompt(start_year: int, end_year: int) -> str:
+    return f"""
 You are a financial historian specializing in modern market volatility.
 
-Task: Search for and extract a list of CRITICAL events from 2020-01-01 to 2026-04-01 that caused significant stock market drops (crashes, corrections, or bear markets) in either the Global (US) or Taiwan markets.
+Task: Search for and extract a list of CRITICAL events from {start_year}-01-01 to {end_year}-12-31 that caused significant stock market drops (crashes, corrections, or bear markets) in either the Global (US) or Taiwan markets.
 
-Special Focus (2024-2026):
-- 2024-08-05: Black Monday / Yen Carry Trade Unwind (日圓套利交易平倉引發全球崩盤)
-- 2024-04-19: Israel-Iran Conflict Escalation (以色列-伊朗衝突升級導致台股創紀錄大跌)
-- 2024-01-01: Noto Peninsula Earthquake (能登半島地震)
-- 2024-04-03: Hualien Earthquake (0403 花蓮大地震)
-- 2024-10-01: Middle East War Expansion (中東戰火擴大)
-- 2025-01-20: New US Administration Policy Shocks (新任美國政府政策衝擊/關稅政策)
+Special Focus:
+- Major Financial Crises (e.g., Dot-com bubble, SARS, 2008 Financial Crisis, COVID-19).
+- Significant Geopolitical Shocks (e.g., Wars, Trade Wars).
+- Policy Shocks (e.g., Aggressive interest rate hikes).
 
 Focus on these specific Categories (類別) and Sub-categories (子類別):
-
-1. 金融危機 (Financial Crisis):
-   - 銀行倒閉 (Bank Failure) - e.g., Silicon Valley Bank (2023)
-   - 日圓套利交易平倉 (Yen Carry Trade Unwind - 2024)
-
-2. 公共衛生 (Public Health):
-   - 傳染病爆發 (Pandemic) - COVID-19 (2020-2022)
-
-3. 地緣政治 (Geopolitics):
-   - 戰爭衝突 (War & Conflict) - Russia-Ukraine (2022), Israel-Hamas (2023-2024)
-   - 貿易戰/制裁 (Trade War & Sanctions) - US-China AI Chip Bans (2024)
-
-4. 自然災害 (Natural Disaster):
-   - 重大事件 (Major Events) - e.g., Hualien Earthquake (2024)
-
-5. 政策衝擊 (Policy Shock):
-   - 貨幣政策 (Monetary Policy) - Aggressive Fed Rate Hikes (2022-2023), BOJ Rate Hike (2024)
+1. 金融危機 (Financial Crisis)
+2. 公共衛生 (Public Health)
+3. 地緣政治 (Geopolitics)
+4. 自然災害 (Natural Disaster)
+5. 政策衝擊 (Policy Shock)
 
 Output Format:
 Produce a valid CSV file content with the following headers (NO QUOTES in header line):
@@ -57,7 +44,7 @@ Requirements:
 - Dates: Format YYYY-MM-DD.
 - "備註" (Note): Briefly explain the impact (e.g., "台股單日重挫...").
 - "Link1": MANDATORY. Provide a reliable source URL.
-- Quantity: Find about 20 high-quality events from 2020 to 2026.
+- Quantity: Find about 20 high-quality events SPECIFICALLY within the period {start_year} to {end_year}.
 - Do not include markdown code block markers.
 """
 
@@ -75,7 +62,6 @@ def _clean_cell(v: str) -> str:
     v = v.strip()
     if v.startswith('"') and v.endswith('"'):
         v = v[1:-1].strip()
-    # Handle cases like " ""text"""
     if v.startswith('"') and v.endswith('"'):
         v = v[1:-1].strip()
     return v
@@ -85,7 +71,6 @@ def save_csv(csv_content: str, output_file: str) -> None:
     process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     new_rows = []
     header = None
-    # Date pattern: YYYY-MM-DD
     date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
     try:
@@ -108,7 +93,6 @@ def save_csv(csv_content: str, output_file: str) -> None:
                 for i, row in enumerate(reader):
                     if i == 0:
                         continue
-                    # Validation: must have enough columns and valid start date
                     if len(row) >= 4 and date_pattern.match(row[3].strip()):
                         while len(row) < len(CSV_HEADERS):
                             row.append(process_timestamp)
@@ -121,9 +105,6 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
     rows_to_write = []
     for row in new_rows:
-        # Strict validation for new rows from LLM:
-        # 1. Must have at least 6 columns (up to 備註)
-        # 2. Start Date must match YYYY-MM-DD precisely
         if len(row) >= 6 and date_pattern.match(row[3].strip()):
             key = (row[2].strip(), row[3].strip())
             if key not in existing_keys:
@@ -150,17 +131,23 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
 
 def generate_historical_crashes() -> None:
-    print("Fetching historical market crash events (1990-Present)...")
-    print("Sending request to Codex (chatgpt-pro)...")
-
+    print("Fetching historical market crash events (Multi-stage)...")
+    periods = [(1995, 2010), (2010, 2026)]
+    
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchHistoricalCrashes", PROMPT, draft_provider="codex"))
-        save_csv(csv_content, OUTPUT_FILE)
+        
+        for start_year, end_year in periods:
+            print(f"\n>>> Fetching events for period: {start_year} - {end_year}")
+            prompt = build_prompt(start_year, end_year)
+            task_name = f"InvestorEvents_FetchHistoricalCrashes_{start_year}_{end_year}"
+            
+            csv_content = clean_csv(client.generate_smart(task_name, prompt, draft_provider="codex"))
+            save_csv(csv_content, OUTPUT_FILE)
 
-        print("-" * 50)
-        print(csv_content[:800] + "\n...(truncated)")
-        print("-" * 50)
+            print("-" * 30)
+            print(csv_content[:400] + "\n...(truncated)")
+            print("-" * 30)
 
     except Exception as e:
         print(f"An error occurred: {e}")
