@@ -119,10 +119,14 @@ def save_csv(csv_content: str, output_file: str) -> None:
                 print(f"Skipping malformed or truncated row: {row}")
 
     if rows_to_write or existing_rows:
+        all_rows = existing_rows + rows_to_write
+        # Sort by Start Date (index 3) descending (newest first)
+        all_rows.sort(key=lambda r: r[3] if len(r) > 3 else "", reverse=True)
+        
         with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header or CSV_HEADERS)
-            writer.writerows(existing_rows + rows_to_write)
+            writer.writerows(all_rows)
     
     if rows_to_write:
         print(f"Appended {len(rows_to_write)} new events to '{output_file}'.")
