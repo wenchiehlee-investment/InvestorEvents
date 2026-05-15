@@ -47,6 +47,8 @@ Produce a valid CSV file content with the following headers (no quotes):
 類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
 
 Requirements:
+- CSV Formatting: Use standard CSV format. DO NOT wrap cells in double quotes unless the cell content contains a comma. 
+- NO NESTED QUOTES: Never use double-double quotes (e.g., ""text"") or triple quotes.
 - Language: All text must be in Traditional Chinese (繁體中文), except proper nouns (event names, organizations) which may keep English.
 - Dates: Format YYYY-MM-DD. If only a single day, repeat the same date for 開始日期 and 結束日期.
 - "事件名稱": Include the event/conference name and Jensen Huang's role (e.g., "Jensen Huang 於 GTC 2026 發表主題演講").

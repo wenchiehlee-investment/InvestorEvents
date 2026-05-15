@@ -5,7 +5,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from llm import LLMClient
 
-load_dotenv()
+load_dotenv(override=True)
 
 OUTPUT_FILE = "raw_event_historical_crashes.csv"
 CSV_HEADERS = [
@@ -46,10 +46,12 @@ Focus on these specific Categories (類別) and Sub-categories (子類別):
    - 貨幣政策 (Monetary Policy) - Aggressive Fed Rate Hikes (2022-2023), BOJ Rate Hike (2024)
 
 Output Format:
-Produce a valid CSV file content with the following headers:
-"類別", "子類別", "事件名稱", "開始日期", "結束日期", "備註", "Link1", "Link2"
+Produce a valid CSV file content with the following headers (NO QUOTES in header line):
+類別,子類別,事件名稱,開始日期,結束日期,備註,Link1,Link2
 
 Requirements:
+- CSV Formatting: Use standard CSV format. DO NOT wrap cells in double quotes unless the cell content contains a comma. 
+- NO NESTED QUOTES: Never use double-double quotes (e.g., ""text"") or triple quotes.
 - Language: All text must be in Traditional Chinese (繁體中文).
 - Dates: Format YYYY-MM-DD.
 - "備註" (Note): Briefly explain the impact (e.g., "台股單日重挫...").
@@ -68,13 +70,23 @@ def clean_csv(text: str) -> str:
     return text
 
 
+def _clean_cell(v: str) -> str:
+    v = v.strip()
+    if v.startswith('"') and v.endswith('"'):
+        v = v[1:-1].strip()
+    # Handle cases like " ""text"""
+    if v.startswith('"') and v.endswith('"'):
+        v = v[1:-1].strip()
+    return v
+
+
 def save_csv(csv_content: str, output_file: str) -> None:
     process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     new_rows = []
     header = None
     try:
         reader = csv.reader(io.StringIO(csv_content))
-        rows = list(reader)
+        rows = [[_clean_cell(c) for c in row] for row in reader]
         if rows:
             header = list(CSV_HEADERS)
             new_rows = rows[1:]
@@ -92,11 +104,13 @@ def save_csv(csv_content: str, output_file: str) -> None:
                 for i, row in enumerate(reader):
                     if i == 0:
                         continue
-                    if len(row) >= 4:
+                    # Basic validation: must have enough columns and main data
+                    if len(row) >= 4 and row[2].strip() and row[3].strip():
                         while len(row) < len(CSV_HEADERS):
                             row.append(process_timestamp)
-                        row[-2] = process_timestamp
-                        row[-1] = process_timestamp
+                        # Ensure last two columns are timestamps if they were empty
+                        if not row[-2]: row[-2] = process_timestamp
+                        if not row[-1]: row[-1] = process_timestamp
                         existing_rows.append(row)
                         existing_keys.add((row[2].strip(), row[3].strip()))
         except Exception as e:
@@ -104,7 +118,7 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
     rows_to_write = []
     for row in new_rows:
-        if len(row) >= 4:
+        if len(row) >= 4 and row[2].strip() and row[3].strip():
             key = (row[2].strip(), row[3].strip())
             if key not in existing_keys:
                 while len(row) < len(CSV_HEADERS):
