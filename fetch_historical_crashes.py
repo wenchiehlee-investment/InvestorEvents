@@ -1,6 +1,7 @@
 import os
 import csv
 import io
+import re
 from datetime import datetime
 from dotenv import load_dotenv
 from llm import LLMClient
@@ -84,6 +85,9 @@ def save_csv(csv_content: str, output_file: str) -> None:
     process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
     new_rows = []
     header = None
+    # Date pattern: YYYY-MM-DD
+    date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
     try:
         reader = csv.reader(io.StringIO(csv_content))
         rows = [[_clean_cell(c) for c in row] for row in reader]
@@ -104,11 +108,10 @@ def save_csv(csv_content: str, output_file: str) -> None:
                 for i, row in enumerate(reader):
                     if i == 0:
                         continue
-                    # Basic validation: must have enough columns and main data
-                    if len(row) >= 4 and row[2].strip() and row[3].strip():
+                    # Validation: must have enough columns and valid start date
+                    if len(row) >= 4 and date_pattern.match(row[3].strip()):
                         while len(row) < len(CSV_HEADERS):
                             row.append(process_timestamp)
-                        # Ensure last two columns are timestamps if they were empty
                         if not row[-2]: row[-2] = process_timestamp
                         if not row[-1]: row[-1] = process_timestamp
                         existing_rows.append(row)
@@ -118,7 +121,10 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
     rows_to_write = []
     for row in new_rows:
-        if len(row) >= 4 and row[2].strip() and row[3].strip():
+        # Strict validation for new rows from LLM:
+        # 1. Must have at least 6 columns (up to 備註)
+        # 2. Start Date must match YYYY-MM-DD precisely
+        if len(row) >= 6 and date_pattern.match(row[3].strip()):
             key = (row[2].strip(), row[3].strip())
             if key not in existing_keys:
                 while len(row) < len(CSV_HEADERS):
@@ -127,12 +133,16 @@ def save_csv(csv_content: str, output_file: str) -> None:
                 row[-1] = process_timestamp
                 rows_to_write.append(row)
                 existing_keys.add(key)
+        else:
+            if any(cell.strip() for cell in row):
+                print(f"Skipping malformed or truncated row: {row}")
 
     if rows_to_write or existing_rows:
         with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(header or CSV_HEADERS)
             writer.writerows(existing_rows + rows_to_write)
+    
     if rows_to_write:
         print(f"Appended {len(rows_to_write)} new events to '{output_file}'.")
     else:
