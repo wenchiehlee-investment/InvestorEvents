@@ -2,7 +2,7 @@ group:
   - files:
       - source: raw_event_upcoming_earnings.csv
         dest: raw_event_upcoming_earnings.csv
-      - source: raw_column_definition.md
+      - source: raw_column_definition_InvestorEvents.md
         dest: definitions/raw_column_definition_InvestorEvents.md
     repos: |
       wenchiehlee-investment/Python-Actions.GoodInfo.Analyzer
