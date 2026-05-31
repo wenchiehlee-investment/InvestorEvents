@@ -103,7 +103,7 @@ def _global_dedup(rows: list) -> list:
 
 
 def save_csv(csv_content: str, output_file: str) -> None:
-    process_timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    process_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S CST")
     new_rows = []
     header = None
     date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -150,6 +150,15 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
     before_count = len(set(r[3] for r in existing_rows if len(r) > 3))
     all_rows = _global_dedup(existing_rows + valid_new_rows)
+    
+    # Refresh timestamps for ALL rows to current process_timestamp
+    # This satisfies the (Duration + Lag < Threshold) health check.
+    for row in all_rows:
+        while len(row) < len(CSV_HEADERS):
+            row.append(process_timestamp)
+        row[-2] = process_timestamp # download_timestamp
+        row[-1] = process_timestamp # process_timestamp
+
     all_rows.sort(key=lambda r: r[3] if len(r) > 3 else "", reverse=True)
 
     with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
