@@ -1,0 +1,16 @@
+group:
+  - files:
+      - source: raw_event_upcoming_earnings.csv
+        dest: data/InvestorEvents/raw_event_upcoming_earnings.csv
+      - source: raw_event_historical_crashes.csv
+        dest: data/InvestorEvents/raw_event_historical_crashes.csv
+      - source: raw_event_ai_events.csv
+        dest: data/InvestorEvents/raw_event_ai_events.csv
+      - source: raw_event_nvidia_events.csv
+        dest: data/InvestorEvents/raw_event_nvidia_events.csv
+      - source: raw_event_stock_events.csv
+        dest: data/InvestorEvents/raw_event_stock_events.csv
+      - source: raw_column_definition_InvestorEvents.md
+        dest: definitions/raw_column_definition_InvestorEvents.md
+    repos: |
+      wenchiehlee-money/biztrends.TW
