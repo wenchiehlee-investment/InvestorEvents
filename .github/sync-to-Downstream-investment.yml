@@ -1,7 +1,7 @@
 group:
   - files:
       - source: raw_event_upcoming_earnings.csv
-        dest: raw_event_upcoming_earnings.csv
+        dest: data/upstream/raw_event_upcoming_earnings.csv
       - source: raw_column_definition_InvestorEvents.md
         dest: definitions/raw_column_definition_InvestorEvents.md
     repos: |
