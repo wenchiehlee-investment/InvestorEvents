@@ -51,6 +51,8 @@ jobs:
 
       - name: Trigger sync to downstream
         if: steps.commit.outputs.changed == 'true'
-        run: gh workflow run sync-to-Downstream.yml
+        run: |
+          gh workflow run sync-to-Downstream.yml
+          gh workflow run sync-to-biztrends.yml
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
