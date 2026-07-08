@@ -52,7 +52,31 @@ def _load_us_watchlist() -> dict[str, str]:
     print("  [US_WATCHLIST] raw_conceptstock_company_metadata.csv not found, using empty list.")
     return {}
 
+
+def _load_us_next_fiscal_quarter() -> dict[str, str]:
+    """從 raw_conceptstock_company_metadata.csv 的「即將發布」欄位載入
+    {Ticker: 'FY2026 Q4'} -- 每家公司自己的真實財年季度命名（與 SEC 申報一致）。
+
+    _quarter_label() 只能從財報公告日期用固定的「約一季前」位移公式反推涵蓋
+    季度，對回報時滯較短的公司（例如 DELL/NVDA，財季結束後約 3-4 週即公告，
+    短於公式假設的最長 3 個月）會推算錯一整季。metadata 的「即將發布」是
+    ConceptStocks 用公司實際 SEC 申報維護的權威值，可直接使用、不必用日期猜。
+    """
+    for path in _METADATA_CSV_PATHS:
+        if not os.path.exists(path):
+            continue
+        result = {}
+        with open(path, encoding="utf-8-sig") as f:
+            for row in csv.DictReader(f):
+                ticker = row.get("Ticker", "").strip()
+                next_fq = row.get("即將發布", "").strip()
+                if ticker and ticker != "-" and next_fq and next_fq != "-":
+                    result[ticker] = next_fq
+        return result
+    return {}
+
 US_WATCHLIST = _load_us_watchlist()
+US_NEXT_FISCAL_QUARTER = _load_us_next_fiscal_quarter()
 
 WATCHLIST_CSV      = "StockID_TWSE_TPEX.csv"        # 完整觀察名單
 WATCHLIST_FOCUS_CSV = "StockID_TWSE_TPEX_focus.csv"  # 專注名單
@@ -377,7 +401,12 @@ def _extract_earnings_dates(symbol: str, company: str, market: str,
         if start <= dt <= end:
             date_str = dt.strftime("%Y-%m-%d")
             display = symbol.replace(".TW", "").replace(".TWO", "")
-            quarter = _quarter_label(dt)
+            # Prefer the company's own real fiscal-quarter label (ConceptStocks
+            # metadata, sourced from actual SEC filings) over the date-shift
+            # heuristic, which assumes a roughly one-quarter reporting lag and
+            # mislabels companies that report sooner after quarter-end (e.g.
+            # DELL/NVDA report ~3-4 weeks post quarter-end, not up to 3 months).
+            quarter = US_NEXT_FISCAL_QUARTER.get(symbol) or _quarter_label(dt)
             rows.append([
                 "財報公告", market,
                 f"{company}({display}) {quarter} 財報",
