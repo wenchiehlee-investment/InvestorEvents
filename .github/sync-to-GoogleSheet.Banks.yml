@@ -1,0 +1,10 @@
+# GoogleSheet.Banks/fugle_stock_advisor.py --pre-market 開盤前簡報「今日事件」用：
+# 台股+美股財報/法說日期（美股 AI 領頭股的財報夜=台股 AI 鏈隔日開盤的波動窗口）。
+group:
+  - files:
+      - source: raw_event_upcoming_earnings.csv
+        dest: data/InvestorEvents/raw_event_upcoming_earnings.csv
+      - source: raw_column_definition_InvestorEvents.md
+        dest: definitions/raw_column_definition_InvestorEvents.md
+    repos: |
+      WJLEE1020/GoogleSheet.Banks
