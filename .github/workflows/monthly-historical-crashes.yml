@@ -1,0 +1,56 @@
+name: Monthly Historical Crashes Fetch
+
+on:
+  schedule:
+    # Every month on day 1 at 02:00 UTC = 10:00 Taipei time
+    - cron: "0 2 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install python-dotenv
+          pip install "llm @ git+https://github.com/wenchiehlee/llm.git"
+
+      - name: Run fetch
+        run: python fetch_historical_crashes.py
+
+      - name: Commit updated CSV
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add raw_event_historical_crashes.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore: monthly update raw_event_historical_crashes.csv"
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Trigger sync to downstream
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run sync-to-Downstream.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
