@@ -7,10 +7,17 @@ Available keys: crashes, stock, ai, nvidia, earnings
 """
 
 import sys
+from pathlib import Path
+
 from fetch_historical_crashes import generate_historical_crashes
 from fetch_stock_events import generate_stock_events
 from fetch_ai_events import generate_ai_events
 from fetch_nvidia_events import generate_nvidia_events
+
+# fetch_upcoming_earnings.py lives in skill-stock-investorevent-fetch (shared with
+# InvestorConference) rather than at the repo root — see that skill's SKILL.md
+# ("InvestorEvents integration") for why it must not be copied back here.
+sys.path.insert(0, str(Path(__file__).resolve().parent / "skills" / "skill-stock-investorevent-fetch" / "scripts"))
 from fetch_upcoming_earnings import generate_upcoming_earnings
 
 FETCHERS = {
