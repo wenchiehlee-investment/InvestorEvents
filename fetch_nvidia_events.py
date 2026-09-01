@@ -130,11 +130,13 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
 def generate_nvidia_events() -> None:
     print("Fetching NVIDIA AI hardware and business events (2012-Present)...")
-    print("Sending request to Codex (chatgpt-pro)...")
+    print("Sending request to Codex (agy/gemini)...")
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchNvidiaEvents", PROMPT, draft_provider="codex"))
+        csv_content = clean_csv(client.generate_smart(
+            "InvestorEvents_FetchNvidiaEvents", PROMPT, draft_provider="codex", draft_model="gemini-2.5-flash"
+        ))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)

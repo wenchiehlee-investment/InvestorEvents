@@ -141,7 +141,9 @@ def generate_jensen_huang_talk_events() -> None:
     try:
         client = LLMClient(app_name="InvestorEvents")
         prompt = build_prompt()
-        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchJesenHuangTalkEvents", prompt, draft_provider="codex"))
+        csv_content = clean_csv(client.generate_smart(
+            "InvestorEvents_FetchJesenHuangTalkEvents", prompt, draft_provider="codex", draft_model="gemini-2.5-flash"
+        ))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)

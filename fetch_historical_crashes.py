@@ -185,7 +185,9 @@ def generate_historical_crashes() -> None:
             prompt = build_prompt(start_year, end_year)
             task_name = f"InvestorEvents_FetchHistoricalCrashes_{start_year}_{end_year}"
             
-            csv_content = clean_csv(client.generate_smart(task_name, prompt, draft_provider="codex"))
+            csv_content = clean_csv(client.generate_smart(
+                task_name, prompt, draft_provider="codex", draft_model="gemini-2.5-flash"
+            ))
             save_csv(csv_content, OUTPUT_FILE)
 
             print("-" * 30)

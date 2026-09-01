@@ -121,11 +121,13 @@ def save_csv(csv_content: str, output_file: str) -> None:
 
 def generate_stock_events() -> None:
     print("Fetching important stock market events (1990-Present)...")
-    print("Sending request to Codex (chatgpt-pro)...")
+    print("Sending request to Codex (agy/gemini)...")
 
     try:
         client = LLMClient(app_name="InvestorEvents")
-        csv_content = clean_csv(client.generate_smart("InvestorEvents_FetchStockEvents", PROMPT, draft_provider="codex"))
+        csv_content = clean_csv(client.generate_smart(
+            "InvestorEvents_FetchStockEvents", PROMPT, draft_provider="codex", draft_model="gemini-2.5-flash"
+        ))
         save_csv(csv_content, OUTPUT_FILE)
 
         print("-" * 50)
