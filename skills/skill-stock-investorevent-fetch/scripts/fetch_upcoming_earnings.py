@@ -29,6 +29,16 @@ from dotenv import load_dotenv
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# On Windows, a non-UTF-8 console codepage (e.g. cp1252) makes any print()
+# of this script's CJK category labels (財報/法說會/受邀法說) crash with
+# UnicodeEncodeError before the CSV is ever touched.
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 load_dotenv()
 
 # skill-stock-fiscal-quarter-resolve is deployed as a sibling skill folder
@@ -275,6 +285,29 @@ def _normalize_earnings_name(event_name: str, date_str: str, category: str) -> s
     except Exception:
         return event_name
 
+
+
+def _normalize_us_event_quarter_name(event_name: str, date_str: str, market: str) -> str:
+    """Normalize known US fiscal-quarter labels using the shared resolver.
+
+    This fixes persisted legacy rows whose event names already contain a quarter
+    label, for example NVDA's 2026-08-26 event previously stored as FY2026 Q4
+    even though the official announcement is FY2027 Q2.
+    """
+    if market != "美股":
+        return event_name
+    ticker = _extract_event_ticker(event_name)
+    if not ticker or not date_str:
+        return event_name
+    resolved = resolve_fiscal_quarter(ticker, date_str)
+    if resolved.get("confidence") == "unknown" or not resolved.get("label"):
+        return event_name
+    return re.sub(
+        r"(?:FY\d{4}\s+Q[1-4]|\d{4}\s+Q[1-4])",
+        resolved["label"],
+        event_name,
+        count=1,
+    )
 
 def _extract_event_ticker(event_name: str) -> str | None:
     """Return the ticker/code from the final parenthesized token in an event name."""
@@ -780,6 +813,7 @@ def save_csv(rows: list[list], output_file: str) -> None:
                         row = _normalize_category(row)
                         row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
                         row[2] = _normalize_earnings_name(row[2], row[3], row[0])
+                        row[2] = _normalize_us_event_quarter_name(row[2], row[3], row[1])
                         while len(row) < len(CSV_HEADERS):
                             row.append(process_timestamp)
                         row[-2] = process_timestamp
@@ -802,6 +836,7 @@ def save_csv(rows: list[list], output_file: str) -> None:
         row = _normalize_category(row)
         row[2] = _normalize_fashuohui_name(row[2], row[3], row[0])
         row[2] = _normalize_earnings_name(row[2], row[3], row[0])
+        row[2] = _normalize_us_event_quarter_name(row[2], row[3], row[1])
         name = row[2].strip()
         while len(row) < len(CSV_HEADERS):
             row.append(process_timestamp)
