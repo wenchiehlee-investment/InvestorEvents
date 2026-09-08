@@ -28,6 +28,8 @@ pulling in unrelated fetch/scrape logic or watchlist-file prerequisites.
 """
 from __future__ import annotations
 
+import re
+
 # Fiscal year start month for US stocks whose fiscal year != calendar year.
 # e.g. QCOM fiscal year starts October -> FY2026 Q1 = Oct-Dec 2025 (calendar Q4 2025)
 KNOWN_US_FISCAL_YEAR_START_MONTH = {
@@ -36,6 +38,10 @@ KNOWN_US_FISCAL_YEAR_START_MONTH = {
     "MSFT": 7,    # July
     "NVDA": 2,    # February (FY starts Feb 1)
     "DELL": 2,    # February (FY starts Feb 1)
+    "AVGO": 11,   # November (FYE ~early Nov; SEC EDGAR fiscal-year-end 11/01)
+    "HPE": 11,    # November (FYE Oct 31; Q3 FY2026 ended 2026-07-31)
+    "HPQ": 11,   # November (HP fiscal year ends October 31)
+    "0992HK": 4,   # Lenovo fiscal year starts April 1 (HK listing 0992.HK)
 }
 
 # US stocks whose fiscal year equals the calendar year, but whose upstream
@@ -43,17 +49,10 @@ KNOWN_US_FISCAL_YEAR_START_MONTH = {
 # calendar quarter should override it.
 KNOWN_US_CALENDAR_YEAR_EARNINGS = {"AMD", "AMZN", "GOOGL", "INTC", "META", "TSM"}
 
-# Companies whose reported fiscal quarter follows a stable announcement-quarter
-# cadence that differs from the generic fiscal-year calculation. Values map the
-# calendar quarter containing the announcement to (FY year offset, fiscal quarter).
-KNOWN_ANNOUNCEMENT_QUARTERS = {
-    "HPQ": {1: (0, 1), 2: (0, 2), 3: (0, 3), 4: (0, 4)},
-    "0992.HK": {1: (0, 3), 2: (0, 4), 3: (1, 1), 4: (1, 2)},
-}
-
 
 def normalize_ticker(symbol: str) -> str:
-    return symbol.replace(".TW", "").replace(".TWO", "").upper()
+    # Storage and event sources use both 0992HK and 0992.HK spellings.
+    return re.sub(r"[^A-Z0-9]", "", str(symbol).upper())
 
 
 def calendar_to_fiscal(ticker: str, cal_year, cal_q):
@@ -113,17 +112,6 @@ def resolve_fiscal_quarter(ticker: str, date_str: str) -> dict:
         result as authoritative.
     """
     t = normalize_ticker(ticker)
-    announcement_year = int(date_str[:4])
-    announcement_q = (int(date_str[5:7]) - 1) // 3 + 1
-    announcement_map = KNOWN_ANNOUNCEMENT_QUARTERS.get(t)
-    if announcement_map:
-        year_offset, fiscal_q = announcement_map[announcement_q]
-        fiscal_year = announcement_year + year_offset
-        return {
-            "year": str(fiscal_year), "quarter": str(fiscal_q),
-            "confidence": "announcement_calendar",
-            "label": f"FY{fiscal_year} Q{fiscal_q}",
-        }
 
     if t in KNOWN_US_FISCAL_YEAR_START_MONTH:
         cal_year, cal_q = expected_us_calendar_earnings_quarter(date_str)
