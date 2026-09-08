@@ -43,6 +43,14 @@ KNOWN_US_FISCAL_YEAR_START_MONTH = {
 # calendar quarter should override it.
 KNOWN_US_CALENDAR_YEAR_EARNINGS = {"AMD", "AMZN", "GOOGL", "INTC", "META", "TSM"}
 
+# Companies whose reported fiscal quarter follows a stable announcement-quarter
+# cadence that differs from the generic fiscal-year calculation. Values map the
+# calendar quarter containing the announcement to (FY year offset, fiscal quarter).
+KNOWN_ANNOUNCEMENT_QUARTERS = {
+    "HPQ": {1: (0, 1), 2: (0, 2), 3: (0, 3), 4: (0, 4)},
+    "0992.HK": {1: (0, 3), 2: (0, 4), 3: (1, 1), 4: (1, 2)},
+}
+
 
 def normalize_ticker(symbol: str) -> str:
     return symbol.replace(".TW", "").replace(".TWO", "").upper()
@@ -105,6 +113,17 @@ def resolve_fiscal_quarter(ticker: str, date_str: str) -> dict:
         result as authoritative.
     """
     t = normalize_ticker(ticker)
+    announcement_year = int(date_str[:4])
+    announcement_q = (int(date_str[5:7]) - 1) // 3 + 1
+    announcement_map = KNOWN_ANNOUNCEMENT_QUARTERS.get(t)
+    if announcement_map:
+        year_offset, fiscal_q = announcement_map[announcement_q]
+        fiscal_year = announcement_year + year_offset
+        return {
+            "year": str(fiscal_year), "quarter": str(fiscal_q),
+            "confidence": "announcement_calendar",
+            "label": f"FY{fiscal_year} Q{fiscal_q}",
+        }
 
     if t in KNOWN_US_FISCAL_YEAR_START_MONTH:
         cal_year, cal_q = expected_us_calendar_earnings_quarter(date_str)
