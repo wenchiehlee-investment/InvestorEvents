@@ -35,6 +35,14 @@ CASES = [
     ("HPE", "2026-09-02", "FY2026 Q3", "SEC 8-K ex-991x922026x8k.htm / investors.hpe.com press release: 'fiscal 2026 third quarter results' (period ended 2026-07-31); raw_event_upcoming_earnings.csv had this mislabeled as FY2026 Q1"),
     ("0992.HK", "2026-08-13", "FY2027 Q1", "Lenovo official Q1 FY2026/27 results announcement; fiscal year starts April 1"),
     ("HPQ", "2026-08-26", "FY2026 Q3", "HP official fiscal 2026 third-quarter results release; fiscal year ends October 31"),
+    ("AMZN", "2026-07-30", "2026 Q2", "Amazon official Q2 2026 results release"),
+    ("ARM", "2026-07-29", "FY2027 Q1", "Arm official FYE27 Q1 results page"),
+    ("ASML", "2026-07-15", "2026 Q2", "ASML official Q2 2026 results release"),
+    ("META", "2026-07-29", "2026 Q2", "Meta official Q2 2026 earnings-call page"),
+    ("MU", "2026-06-24", "FY2026 Q3", "Micron official fiscal Q3 2026 results release"),
+    ("ORCL", "2026-09-10", "FY2027 Q1", "Oracle official Q1 fiscal 2027 results release"),
+    ("SIMO", "2026-07-29", "2026 Q2", "yfinance reported earnings date"),
+    ("TSM", "2026-07-16", "2026 Q2", "TSMC official Q2 2026 earnings call materials"),
 ]
 
 
