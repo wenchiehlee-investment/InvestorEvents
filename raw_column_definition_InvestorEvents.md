@@ -32,7 +32,7 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 
 ## raw_event_historical_crashes.csv (Historical Market Crashes)
 **No:** 61
-**Source:** `fetch_historical_crashes.py` via LLM / Financial News
+**Source:** `skills/skill-stock-investorevent-fetch/scripts/fetch_historical_crashes.py` via LLM / Financial News
 **Extraction Strategy:** Uses LLM to identify and describe significant market corrections and crashes from 2020 to 2026.
 
 ### Column Definitions:
@@ -54,7 +54,7 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 
 ## raw_event_ai_events.csv (AI Technology & Market Events)
 **No:** 62
-**Source:** `fetch_ai_events.py` via LLM / Financial News
+**Source:** `skills/skill-stock-investorevent-fetch/scripts/fetch_ai_events.py` via LLM / Financial News
 
 ### Column Definitions:
 
@@ -71,7 +71,7 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 
 ## raw_event_nvidia_events.csv (NVIDIA Product & Business Milestones)
 **No:** 63
-**Source:** `fetch_nvidia_events.py` via LLM / Financial News
+**Source:** `skills/skill-stock-investorevent-fetch/scripts/fetch_nvidia_events.py` via LLM / Financial News
 
 ### Column Definitions:
 
@@ -88,7 +88,7 @@ destination: https://raw.githubusercontent.com/wenchiehlee-investment/Python-Act
 
 ## raw_event_stock_events.csv (Critical Stock Market Events)
 **No:** 64
-**Source:** `fetch_stock_events.py` via LLM / Financial News
+**Source:** `skills/skill-stock-investorevent-fetch/scripts/fetch_stock_events.py` via LLM / Financial News
 
 ### Column Definitions:
 

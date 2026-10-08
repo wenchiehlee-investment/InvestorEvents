@@ -32,7 +32,7 @@ jobs:
           pip install "llm @ git+https://github.com/wenchiehlee/llm.git"
 
       - name: Run fetch
-        run: python fetch_historical_crashes.py
+        run: python skills/skill-stock-investorevent-fetch/scripts/fetch_historical_crashes.py
 
       - name: Commit updated CSV
         id: commit

@@ -31,7 +31,7 @@ jobs:
 
       - name: Run fetch
         # This takes ~15-20 minutes due to sequential material info queries
-        run: python fetch_dividends_announce.py
+        run: python skills/skill-stock-investorevent-fetch/scripts/fetch_dividends_announce.py
 
       - name: Commit updated CSV
         id: commit
