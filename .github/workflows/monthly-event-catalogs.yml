@@ -1,0 +1,92 @@
+name: Monthly Investor Event Catalog Refresh
+
+on:
+  schedule:
+    - cron: "0 2 1 * *" # First day of each month, 10:00 Taipei time.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install python-dotenv
+          pip install "llm @ git+https://github.com/wenchiehlee/llm.git"
+
+      - name: Refresh monthly event catalogs
+        env:
+          CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_APP_NAME: InvestorEvents
+        run: |
+          set -euo pipefail
+          python skills/skill-stock-investorevent-fetch/scripts/fetch_historical_crashes.py
+          python skills/skill-stock-investorevent-fetch/scripts/fetch_ai_events.py
+          python skills/skill-stock-investorevent-fetch/scripts/fetch_nvidia_events.py
+          python skills/skill-stock-investorevent-fetch/scripts/fetch_stock_events.py
+
+      - name: Verify all four CSVs refreshed during this run
+        run: |
+          python - <<'PYCODE'
+          import csv
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          cutoff = datetime.now(timezone.utc) - timedelta(hours=3)
+          files = [
+              "raw_event_historical_crashes.csv",
+              "raw_event_ai_events.csv",
+              "raw_event_nvidia_events.csv",
+              "raw_event_stock_events.csv",
+          ]
+          for name in files:
+              path = Path(name)
+              with path.open(newline="", encoding="utf-8-sig") as source:
+                  rows = list(csv.DictReader(source))
+              stamps = [row.get("process_timestamp", "").strip() for row in rows]
+              parsed = [datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                        for value in stamps if value]
+              if not parsed or max(parsed) < cutoff:
+                  raise SystemExit(f"{name} did not receive a fresh UTC process_timestamp")
+              print(f"{name}: {max(parsed).strftime('%Y-%m-%dT%H:%M:%SZ')}")
+          PYCODE
+
+      - name: Commit refreshed catalogs
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add raw_event_historical_crashes.csv raw_event_ai_events.csv raw_event_nvidia_events.csv raw_event_stock_events.csv
+          if git diff --cached --quiet; then
+            echo "No catalog changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "chore: monthly refresh InvestorEvents catalogs"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger downstream syncs
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          gh workflow run sync-to-Downstream.yml
+          gh workflow run sync-to-biztrends.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

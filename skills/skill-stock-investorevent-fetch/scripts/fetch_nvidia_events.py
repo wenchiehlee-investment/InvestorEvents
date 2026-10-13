@@ -1,7 +1,7 @@
 import os
 import csv
 import io
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from llm import LLMClient
 
@@ -84,7 +84,7 @@ def _clean_cell(v: str) -> str:
 
 
 def save_csv(csv_content: str, output_file: str) -> None:
-    process_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S CST")
+    process_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     new_rows = []
     try:
         reader = csv.reader(io.StringIO(csv_content))
